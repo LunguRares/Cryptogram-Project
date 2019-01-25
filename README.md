@@ -25,7 +25,7 @@ messages in English. There may also be common groups of letters such as ‘TH’
 
  Submission | Submission Details | Deadline | Weighting | Marking and Feedback 
 ------------- | -----------------| -------- | --------- | --------------------
- User Storeies | MyPlace | 4/2/19 9am | 8% | Will take place in labs week commencing 4/2/19 
+ User Stories | MyPlace | 4/2/19 9am | 8% | Will take place in labs week commencing 4/2/19 
  High Level Design (Class Diagram) | MyPlace | 18/2/19 9am | 8% | Will take place in labs week commencing 18/2/19
  Iteration 1 | MyPlace | 4/3/19 9am | 8% | Will take place in labs week commencing 4/3/19 
  Iteration 2 | MyPlace | 18/3/19 9am | 8% | Will take place in labs week commencing 18/3/19 
