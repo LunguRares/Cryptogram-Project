@@ -21,31 +21,52 @@ If a leaderboard is implemented, is it important for the end user to not be able
 🌹🌹
 
 # User Stories
-### As a competitive gamer, I would like the game to have a timer so that I can keep track of my scores.
 
+### As a user, I want the game to have the choice between number and letter mappings so that I can play with both my keypad and the letter keyboard
+
+### As a user, I want the game to have a hint button so that I can get help when I get stuck.
+
+### As the product owner, I want the puzzle to have 15 diffrerent cryptograms so that the users have a diverse playing experience.
+
+### As a user, I want to be able to log in, so that I can look at my statistics and keep track of my progress.
+
+### As a user, I want to be able to save the progress between session so that I can keep playing even when I quit the game.
+
+### As a user, I want to be able to tell when I have mapped a letter twice so that It is easier to spot my mistakes.
+
+### As a product owner, I want the game to have a random mapping for the letters between games, so that the game remains unique. 
+
+### As a user, I want to have a "Show solution button" so that If I get completely stuck, I can simply start a new puzzle.
+
+### As a user, I would like the game to have a leaderboard so that I can compare my score with other players.
+
+### As a product owner, I don't want the game to have a 'reset statistic' button so that the users cannot reset their scores.
+
+### As a developer, I want the user data and cryptograms to be saved as a text file so that the information is stored between sessions.
+
+### As a user, I would like to be notified if the puzzle is correct when I input the last letter, so that I know when the game is completed.
+
+
+
+
+
+### As a gamer, I would like the game to have a timer so that I can keep track of my scores.
+- The game will have a timer.
 - The timer will start at 00:00.
 - The timer will begin when the puzzle is first loaded.
 - The timer will keep counting in seconds until the puzzle is solved.
 
-### As an elderly person, I would like the game to have a large font so that I can play the game without the glasses.
+### As a visually impaired person, I would like the game to be accesible so that I can play easily.
 
 - The game will feature two font sizes.
     - The font will be able to be changed using the game's menu
 
-### As a 10 year old kid I would like the game to be easy to play so that I can play against my friends.
+### As a user I would like the game to be intuitive so I dont have to waste my time figuring out how it works.
 
-   - The game will have a GUI.
-   - The GUI will have a menu that is accessible throughout the game
-   - The GUI will be written in English
-   - The GUI will have an "exit" option, that will exit the current game
+
     
-### As a hardcore gamer, I would like the game to have a "Hard Mode" So that I can compete at the highest levels.
 
-- The game will have a "hard mode" that will:
-    - Change the timer settings so that the game counts down, instead of up
-    - If the puzzle is completed, the user will have to "check" for completion themselves as opposed to the computer checking completion after every move.
 
-### As a hardcore gamer, I would like the game to have a leaderboard so that I know when I am improving.
 
    - At the end of every game, the user will have a chance to input their username
    - This username will be shown on a leaderboard, alongside their time and the mode they were playing in
@@ -69,7 +90,7 @@ If a leaderboard is implemented, is it important for the end user to not be able
 
 ### As a busy woman I would like the game to be quick to play so that I can play on my busy commute to work.
 - The game will be quick to load
-- The game will be 
+- The game will be quick to start once the menu loads
     
 ### As an avid bookreader, I would like the game to have some quotes from my favourite authors so I can relate to the game more
    - The game will have a "category" option
@@ -86,3 +107,16 @@ If a leaderboard is implemented, is it important for the end user to not be able
    - The dialog will have a consent button, 
       - If the user consents, they can proceed.
       - If the user does not consent, the leaderboard features will be turned off. 
+
+### As a gamer, I would like the game to have a "Hard Mode" So that I can have a challenge.
+
+- The game will have a "hard mode" that will:
+    - Change the timer settings so that the game counts down, instead of up
+    - If the puzzle is completed, the user will have to "check" for completion themselves as opposed to the computer checking completion after every move.
+
+
+   - The game will have a GUI.
+   - The GUI will have a menu that is accessible throughout the game
+   - The GUI will be written in English
+   - The GUI will have an "exit" option, that will exit the current game
+1.
