@@ -28,9 +28,9 @@
     -The user won't be made aware if the letter has been mapped wrong
     
 ### As a product owner, I want the game to have a random mapping for the letters between games, so that the game remains unique. 
-    -Letter can't be mapped to itself
-    -User won't be able to see mapping
-    -
+    - There will be a mapping for each letter, and this will be made random between games.
+    - Letter can't be mapped to itself
+    - User won't be able to see mapping
     
 ### As a user, I want to have a "Show solution button" so that If I get completely stuck, I can simply start a new puzzle.
     -All remaining letters will be solved if this option is selected
@@ -46,13 +46,13 @@
     -Users can't edit their own stats in any way
     
 ### As a developer, I want the user data and cryptograms to be saved as a text file so that the information is stored between sessions.
-    -
-    -
+    - The cryptogram progress will be saved after every move in an external text file.
+    - The cryptogram progress will be loaded upon signin so that the user can proceed with their progress from their last session.
     
 ### As a user, I would like to be notified if the puzzle is correct when I input the last letter, so that I know when the game is completed.
-    -Meesage appears on screen telling the user they have successfully completed the puzzle
-    -No message if the mapping is wrong i.e fill in all letters and senetence is incorrect
-    
+    - Meesage appears on screen telling the user they have successfully completed the puzzle
+    - No message if the mapping is wrong i.e fill in all letters and senetence is incorrect
+    - This will only occur when the last letter has been input and there is no blank spaces left on the board.
 
 
 
