@@ -28,7 +28,8 @@
     -The user won't be made aware if the letter has been mapped wrong
     
 ### As a product owner, I want the game to have a random mapping for the letters between games, so that the game remains unique. 
-    -
+    -Letter can't be mapped to itself
+    -User won't be able to see mapping
     -
     
 ### As a user, I want to have a "Show solution button" so that If I get completely stuck, I can simply start a new puzzle.
