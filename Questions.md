@@ -1,4 +1,3 @@
-
 # User Stories
 
 ### As a user, I want the game to have the choice between number and letter mappings so that I can play with both my keypad and the letter keyboard
@@ -6,8 +5,8 @@
     -The user can swich mapping during the game
 
 ### As a user, I want the game to have a hint button so that I can get help when I get stuck.
-    - 
     -The hint doesn't replace an already selected letter chosen by the user
+    -The hint button does not have a limit on the number of times used
     
 ### As the product owner, I want the puzzle to have 15 diffrerent cryptograms so that the users have a diverse playing experience.
     -The cryptograms will be of varying character lengths 
