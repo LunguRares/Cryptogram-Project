@@ -204,8 +204,6 @@ public class CryptoGame {
 		for(int i=0;i<26;i++) {
 			System.out.println((char)(97+i)+" "+(char)(gameMapping[i]+97)+" "+(char)(playerMapping[i]+97)+" "+letterFrequency[i]);
 		}
-
-
 	}
 
 	public static void main(String[] args) {
