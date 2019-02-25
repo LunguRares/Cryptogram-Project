@@ -14,7 +14,11 @@ public class CryptoGame {
 	private int[] playerMapping;
 	private int[] letterFrequency;
 	private int mappingSeed;
+	private boolean mappingType;
 	
+	private final boolean LETTER_MAPPING = true;
+	private final boolean NUMBER_MAPPING = false;
+
 	private final int ASCII_a = 97;
 	private final int ASCII_z = 122;
 	private final int NOT_MAPPED = -1;
@@ -31,6 +35,24 @@ public class CryptoGame {
 		phrase = null;
 		previousPhrase = null;
 		}
+	
+	public void setMappingType(boolean mappingType) {
+		this.mappingType = mappingType;
+	}
+	
+	public int[] getGameMapping(){
+		if(mappingType==NUMBER_MAPPING) {
+			return gameMapping;
+		}else {
+			int[] letterMapping;
+			letterMapping = new int[26];
+			for(int index=0; index<gameMapping.length;index++) {
+				letterMapping[index] = gameMapping[index] + ASCII_a;
+			}
+			return letterMapping;
+		}
+		
+	}
 			
 	
 	private void setGameMapping() {
@@ -62,7 +84,7 @@ public class CryptoGame {
 			
 	}
 
-	public void setNewPhrase() {
+	private void setNewPhrase() {
 		//get a random phrase from the file, save into "phrase" and return true if no error occurred and false if not  
 		ArrayList<String> phrases;
 		int noPhrases;
@@ -135,11 +157,43 @@ public class CryptoGame {
 		int zMapping = 25;
 		for(int index=0;index<=zMapping;index++) {
 			if(letterFrequency[index]==0) {
-				playerMapping[index] = gameMapping[index];
+				playerMapping[index] = index;
 			}else {
 				playerMapping[index] = NOT_MAPPED;
 			}
 				
+		}
+	}
+	
+	public boolean inputLetter(int letter,char guess) {
+		int letterNum;
+		int guessNum;
+		
+		if(LETTER_MAPPING)
+		letterNum = letter - ASCII_a;
+		
+		guessNum = guess - ASCII_a;
+
+		for(int index=0;index<gameMapping.length;index++) {
+			if(gameMapping[index] == letterNum) {
+				playerMapping[index] = guessNum;
+				return index==guessNum;
+			}
+		}
+		System.out.println("Error: inputLetter method failed.");
+		return false;
+	}
+	
+	public void undoLetter(int letter) {
+		int letterNum;
+		
+		if(LETTER_MAPPING)
+		letterNum = letter - ASCII_a;
+		
+		for(int index=0;index<gameMapping.length;index++) {
+			if(gameMapping[index] == letterNum) {
+				playerMapping[index] = NOT_MAPPED;
+			}
 		}
 	}
 	
