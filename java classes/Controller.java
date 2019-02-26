@@ -1,39 +1,29 @@
+
 public class Controller {
+	//private Player player;
+	//private PlayerList playerList;
+	private CryptoGame currentGame;
 	
+	public Controller(String playerName) {
+		currentGame = new CryptoGame(playerName);
+	}
 	
-	public Controller()
-	{
-		Player player;
-		PlayerList playerList;
-		CryptoGame currentGame;
-		}
+	public void newGame(boolean LETTER_MAPPING) {
+		currentGame.setMappingType(LETTER_MAPPING);
+		currentGame.newGame();
+		
+	}
 	
-	public void login(String playerName)
-	{
-		
+	public String getPhrase() {
+		String phrase;
+		phrase = currentGame.getPhrase();
+		return phrase;
 	}
-	public void newGame(String playerName)
-	{
-		
+	
+	public int[] getGameMapping() {
+		int [] gameMapping;
+		gameMapping = currentGame.getGameMapping();
+		return gameMapping;
 	}
-	public void loadGame(String playerName)
-	{
-		
-	}
-	public void showLeaderboard()
-	{
-		
-	}
-	public void showUserStatistics(Player player)
-	{
-		
-	}
-	public void getPlayerName()
-	{
-		
-	}
-	public void getGameState()
-	{
-		
-	}
+	
 }
