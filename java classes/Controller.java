@@ -1,5 +1,3 @@
-import org.omg.CORBA.Current;
-
 public class Controller {
 	//private Player player;
 	//private PlayerList playerList;
