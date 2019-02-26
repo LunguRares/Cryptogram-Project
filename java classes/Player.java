@@ -51,6 +51,9 @@ public class Player implements Comparable<Player> {
     public int getCorrectGuesses(){
         return correctGuesses;
     }
+    public String getName(){
+        return name;
+    }
 
     public int compareTo(Player playerTwo) {
         Float ratioOne = this.getRatio();
