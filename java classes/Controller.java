@@ -6,6 +6,7 @@ public class Controller {
 	public Controller(String playerName) {
 		currentGame = new CryptoGame(playerName);
 		playerList = new PlayerList();
+		login(playerName);
 	}
 	
 	public void login(String playerName) {
