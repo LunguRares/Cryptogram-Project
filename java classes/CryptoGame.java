@@ -188,6 +188,22 @@ public class CryptoGame {
 		return false;
 	}
 	
+	public boolean checkAlreadyMapped(char guess) {
+		boolean alreadyMapped;
+		int guessNum;
+		
+		alreadyMapped = false;
+		guessNum = guess - ASCII_a;
+		
+		for(int index=0;index<playerMapping.length;index++) {
+			if(playerMapping[index]==guessNum)
+				alreadyMapped = true;
+		}
+		
+		return alreadyMapped;
+		
+	}
+
 	public void undoLetter(int letter) {
 		int letterNum;
 		
@@ -215,8 +231,28 @@ public class CryptoGame {
         test.newGame();
         test.test();
     }
-    
-    public int[] getLetterFrequency() {
+
+	public int[] getLetterFrequency() {
 		return letterFrequency;
+	}
+
+	public boolean checkCompletion() {
+		boolean gameCompleted = true;
+		
+		for(int index=0;index<=playerMapping.length;index++) {
+			if(playerMapping[index]==NOT_MAPPED)
+				gameCompleted = false;
+		}
+		return gameCompleted;
+	}
+	
+	public boolean checkWin() {
+		boolean gameWon = true;
+				
+		for(int index=0;index<=playerMapping.length;index++) {
+			if(playerMapping[index]!=index)
+				gameWon = false;
+			}
+		return gameWon;
 	}
 }
