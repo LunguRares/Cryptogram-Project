@@ -215,4 +215,8 @@ public class CryptoGame {
         test.newGame();
         test.test();
     }
+    
+    public int[] getLetterFrequency() {
+		return letterFrequency;
+	}
 }
