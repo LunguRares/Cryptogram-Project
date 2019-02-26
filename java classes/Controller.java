@@ -1,4 +1,3 @@
-
 public class Controller {
 	//private Player player;
 	//private PlayerList playerList;
@@ -24,6 +23,12 @@ public class Controller {
 		int [] gameMapping;
 		gameMapping = currentGame.getGameMapping();
 		return gameMapping;
+	}
+	
+	public int[] getLetterFrequency() {
+		int [] letterFrequency;
+		letterFrequency = currentGame.getLetterFrequency();
+		return letterFrequency;
 	}
 	
 }
