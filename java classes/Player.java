@@ -38,8 +38,12 @@ public class Player implements Comparable<Player> {
         if(gameState == WIN){
             completedGames++;
         }
-        gamesPlayed++;
         updateRatio();
+    }
+    
+    public void startedNewGame() {
+    	gamesPlayed++;
+    	updateRatio();
     }
 
     private void updateRatio(){
