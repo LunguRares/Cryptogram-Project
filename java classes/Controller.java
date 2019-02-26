@@ -1,16 +1,21 @@
 public class Controller {
-	//private Player player;
-	//private PlayerList playerList;
+	private Player player;
+	private PlayerList playerList;
 	private CryptoGame currentGame;
 	
 	public Controller(String playerName) {
 		currentGame = new CryptoGame(playerName);
+		playerList = new PlayerList();
+	}
+	
+	public void login(String playerName) {
+		player = playerList.getPlayer(playerName);
 	}
 	
 	public void newGame(boolean LETTER_MAPPING) {
 		currentGame.setMappingType(LETTER_MAPPING);
 		currentGame.newGame();
-		
+		player.startedNewGame();
 	}
 	
 	public String getPhrase() {
@@ -34,7 +39,7 @@ public class Controller {
 	public void inputLetter(int letter,char guess) {
 		boolean correctGuess;
 		correctGuess = currentGame.inputLetter(letter, guess);
-		//player.playerGuess(correctGuess);
+		player.playerGuess(correctGuess);
 	}
 	
 	public boolean checkCompletion() {
