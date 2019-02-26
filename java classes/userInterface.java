@@ -21,7 +21,7 @@ public UserInterface()
 		System.out.println("Hi welcome to our cryptogram game, have fun!\nPlease enter your username");
 		Scanner scan = new Scanner(System.in);
 		String playerName = scan.next();
-		//controller.login(playerName);
+		controller.login(playerName);
 		
 	}
 	private void newGame()
