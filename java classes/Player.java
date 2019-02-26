@@ -9,8 +9,23 @@ public class Player implements Comparable<Player> {
     private int correctGuesses;
     private float winLossRatio;
 
+    public Player(String playerName, int gamesCompleted, int playedGames, int guessesTotal, int guessesCorrect, float ratio){
+        name = playerName;
+        completedGames = gamesCompleted;
+        gamesPlayed = playedGames;
+        totalGuesses = guessesTotal;
+        correctGuesses = guessesCorrect;
+        winLossRatio = ratio;
+    }
+
+
     public Player(String playerName) {
         name = playerName;
+        completedGames = 0;
+        gamesPlayed = 0;
+        totalGuesses = 0;
+        correctGuesses = 0;
+        winLossRatio = 0;
     }
 
 
