@@ -1,3 +1,5 @@
+import org.omg.CORBA.Current;
+
 public class Controller {
 	//private Player player;
 	//private PlayerList playerList;
@@ -29,6 +31,24 @@ public class Controller {
 		int [] letterFrequency;
 		letterFrequency = currentGame.getLetterFrequency();
 		return letterFrequency;
+	}
+	
+	public void inputLetter(int letter,char guess) {
+		boolean correctGuess;
+		correctGuess = currentGame.inputLetter(letter, guess);
+		//player.playerGuess(correctGuess);
+	}
+	
+	public boolean checkCompletion() {
+		return currentGame.checkCompletion(); 
+	}
+	
+	public boolean checkWin() {
+		return currentGame.checkWin();
+	}
+	
+	public boolean checkAlreadyMapped(char guess) {
+		return currentGame.checkAlreadyMapped(guess);
 	}
 	
 }
