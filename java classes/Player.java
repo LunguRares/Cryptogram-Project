@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Player implements Comparable<Player> {
     private final boolean WIN = false;
     private String name;
