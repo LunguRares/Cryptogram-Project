@@ -40,6 +40,10 @@ public class CryptoGame {
 		this.mappingType = mappingType;
 	}
 	
+	public String getPhrase() {
+		return phrase;
+	}
+	
 	public int[] getGameMapping(){
 		if(mappingType==NUMBER_MAPPING) {
 			return gameMapping;
