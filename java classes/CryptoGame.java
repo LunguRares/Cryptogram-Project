@@ -43,6 +43,10 @@ public class CryptoGame {
 			return gameMapping;
 	}		
 	
+	public int[] getPlayerMapping(){
+		return playerMapping;
+	}
+	
 	private void setGameMapping() {
 		
 		Random random;
@@ -184,17 +188,12 @@ public class CryptoGame {
 		}
 		
 		return alreadyMapped;
-		
 	}
 
 	public void undoLetter(int letter) {
-		int letterNum;
-		
-		if(LETTER_MAPPING)
-		letterNum = letter - ASCII_a;
 		
 		for(int index=0;index<gameMapping.length;index++) {
-			if(gameMapping[index] == letterNum) {
+			if(gameMapping[index] == letter) {
 				playerMapping[index] = NOT_MAPPED;
 			}
 		}
@@ -222,7 +221,7 @@ public class CryptoGame {
 	public boolean checkCompletion() {
 		boolean gameCompleted = true;
 		
-		for(int index=0;index<=playerMapping.length;index++) {
+		for(int index=0;index<playerMapping.length;index++) {
 			if(playerMapping[index]==NOT_MAPPED)
 				gameCompleted = false;
 		}
@@ -232,7 +231,7 @@ public class CryptoGame {
 	public boolean checkWin() {
 		boolean gameWon = true;
 				
-		for(int index=0;index<=playerMapping.length;index++) {
+		for(int index=0;index<playerMapping.length;index++) {
 			if(playerMapping[index]!=index)
 				gameWon = false;
 			}
