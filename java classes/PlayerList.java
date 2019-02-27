@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -13,6 +14,11 @@ public class PlayerList {
 
     public PlayerList(){
         loadList();
+    }
+    public static void main(String[] args)
+    {
+    	PlayerList playerList = new PlayerList();
+    	playerList.loadList();
     }
 
     /**
@@ -66,31 +72,37 @@ public class PlayerList {
     public void loadList(){
 
         ArrayList<String> playerLines = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(PLAYERS_FILE))) {
+        try(
+        	BufferedReader reader = new BufferedReader(new FileReader(PLAYERS_FILE))){ 
             String line;
-            while ((line = br.readLine()) != null) {
+            while ((line = reader.readLine() )!= null) 
+            {
                 playerLines.add(line);
             }
+            reader.close();
         }
+       
         catch(IOException e) {
             System.out.println("Error: The file " +PLAYERS_FILE+ " doesn't exist.");
             System.exit(EXIT_FAILURE);
         }
+        //System.out.println(playerLines.get(0));
         populatePlayerList(playerLines);
+        
         }
 
     /** Takes in the lines created by the file reader and creates the player object from them.
      * @param playerLines - The file lines created by the loader class.
      */
     private void populatePlayerList(ArrayList<String> playerLines){
-        for (String playerInformation: playerLines) {
+    	for (String playerInformation: playerLines) {
             String[] tokens = playerInformation.split(",");
-            String name = tokens[1];
-            int  completedGames = Integer.parseInt(tokens[2]);
-            int gamesPlayed = Integer.parseInt(tokens[3]);
-            int totalGuesses = Integer.parseInt(tokens[4]);
-            int correctGuesses = Integer.parseInt(tokens[5]);
-            float winLossRatio = Float.parseFloat(tokens[6]);
+            String name = tokens[0].toLowerCase();
+            int  completedGames = Integer.parseInt(tokens[1]);
+            int gamesPlayed = Integer.parseInt(tokens[2]);
+            int totalGuesses = Integer.parseInt(tokens[3]);
+            int correctGuesses = Integer.parseInt(tokens[4]);
+            float winLossRatio = Float.parseFloat(tokens[5]);
             Player player = new Player(name, completedGames,gamesPlayed,totalGuesses,correctGuesses,winLossRatio);
             players.add(player);
         }
