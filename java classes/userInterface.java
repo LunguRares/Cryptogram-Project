@@ -6,21 +6,15 @@ public class UserInterface {
 	final int NOT_MAPPED = -1;
 	private final int ASCII_a = 97;
 	private final int ASCII_z = 122;
+	private final int GAME_COMPLETED = 1;
+	private final int GAME_RUNNING = 0;
+
 	boolean letterMapping = false;
 	
 	Controller controller;
 	public UserInterface()
 	{
 	
-	}
-	
-	public static void main(String[] args) 
-	{
-		UserInterface ui = new UserInterface();
-		ui.login();
-		ui.newGame();
-		//ui.display();
-		ui.enterLetter();
 	}
 	
 	private void login()
@@ -33,7 +27,15 @@ public class UserInterface {
 	private void newGame()
 	{
 		controller.newGame(letterMapping);
+		
+		display();
+		while(enterLetter()!=GAME_COMPLETED) {
+			display();
+		}
+		
+		
 	}
+	
 	private void loadGame()
 	{
 		
@@ -54,33 +56,62 @@ public class UserInterface {
 	{
 		
 	}
-	private void enterLetter()
+	private int enterLetter()
 	{
 		char letter,guess;
-		display();	
 		int[]gameMapping = controller.getGameMapping();
 		String phrase = controller.getPhrase();
-		System.out.println("\n\nPlease type the letter you want replaced");
-		Scanner input = new Scanner(System.in);
 		
-		letter = input.next().toLowerCase().charAt(0);
-		
-		
-			if(letter >=ASCII_a && letter <= ASCII_z)
-			{
-				System.out.println("What letter would you like to replace it with ?");
-				
-				guess = input.next().toLowerCase().charAt(0);
-				
-				 if(!(guess>96 && guess <123))
-					{
-						System.out.println("Please enter a valid character");
-					}
+		if(letterMapping)
+			System.out.println("\n\nPlease type the letter you want replaced");
+		else 
+			System.out.println("\n\nPlease type the number you want replaced");
+
+		Scanner scanner = new Scanner(System.in);
+		letter = scanner.next().toLowerCase().charAt(0);
+		 
+		if(checkValidLetter(letter)) { //ask for the guess
+			System.out.println("What letter would you like to replace it with ?");
+			guess = scanner.next().toLowerCase().charAt(0);
+			while(!checkValidGuess(guess)) {
+				System.out.println("Please enter a valid letter");
+				guess = scanner.next().toLowerCase().charAt(0);
 			}
-				
-		input.close();
-		//controller.inputLetter(letter, guess);
+		}else {
+			scanner.close();
+			return enterLetter();
+		}		
+		
+		scanner.close();
+		controller.inputLetter(letter, guess);
+		if(controller.checkWin())
+			return GAME_COMPLETED;
+		else
+			return GAME_RUNNING;
 	}
+	private boolean checkValidLetter(char letter) {
+		if(letter >=ASCII_a && letter <= ASCII_z){
+			int[] gameMapping = controller.getGameMapping();
+			int letterNumber = letter - ASCII_a;
+			for(int index=0;index<gameMapping.length;index++) {
+				if(gameMapping[index]==letterNumber) {
+					int[] letterFrequency = controller.getLetterFrequency();
+					if(letterFrequency[index]!=0)
+						return true;
+					else
+						return false;
+				}
+			}
+		}
+		return false;
+	}
+	private boolean checkValidGuess(char guess) {
+		if(guess >= ASCII_a && guess <= ASCII_z) {
+			return true;
+		}
+		return false;
+	}
+
 	private void undo()
 	{
 		
@@ -100,48 +131,44 @@ public class UserInterface {
 		int[] letterFrequency = controller.getLetterFrequency();
 		String phrase = controller.getPhrase();	
 		
-		
-			for(int i = 0; i < phrase.length(); i++ )
-			{
-				char s = phrase.toLowerCase().charAt(i);
-				if(s == 32)
-				{
-						System.out.print("  ");
-				}
-				else
-				{
-					System.out.print("_ ");
-				}
+		for(int i = 0; i < phrase.length(); i++ ){
+			char s = phrase.toLowerCase().charAt(i);
+			if(s == 32){
+					System.out.print("  ");
+			}else {
+				System.out.print("_ ");
 			}
+		}
 			
 		System.out.println();
-			
-			for(int i = 0; i < phrase.length(); i++)
-			{
-				char s = phrase.toLowerCase().charAt(i);	
-				if(s == 32)
-				{
-						System.out.print("  ");
-				}
-				else
-				{
-					s -= 97;
-					System.out.print((char)(gameMapping[s]+97)+" ");
-				}
+		
+		for(int i = 0; i < phrase.length(); i++){
+			char s = phrase.toLowerCase().charAt(i);	
+			if(s == 32){
+					System.out.print("  ");
+			}else {
+				s -= 97;
+				System.out.print((char)(gameMapping[s]+97)+" ");
 			}
-			System.out.println();
-			for(int i = 0; i < phrase.length(); i++)
-			{
-				char s = phrase.toLowerCase().charAt(i);	
-				if(s == 32)
-				{
-						System.out.print("  ");
-				}
-				else
-				{
-					System.out.print(letterFrequency[s-97]+ " ");
-				}
+		}
+		System.out.println();
+		
+		for(int i = 0; i < phrase.length(); i++){
+			char s = phrase.toLowerCase().charAt(i);	
+			if(s == 32){
+					System.out.print("  ");
+			}else {
+				System.out.print(letterFrequency[s-97]+ " ");
 			}
+		}
 	}
-}
 	
+	public static void main(String[] args) 
+	{
+		UserInterface ui = new UserInterface();
+		ui.login();
+		//Main menu loop
+		ui.newGame();
+	}
+	
+}
