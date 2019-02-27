@@ -26,7 +26,7 @@ public class UserInterface {
 	}
 	private void newGame()
 	{
-		controller.newGame(letterMapping);
+		controller.newGame();
 		
 		display();
 		while(enterLetter()!=GAME_COMPLETED) {
