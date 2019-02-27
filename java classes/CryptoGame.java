@@ -14,7 +14,6 @@ public class CryptoGame {
 	private int[] playerMapping;
 	private int[] letterFrequency;
 	private int mappingSeed;
-	private boolean mappingType;
 	
 	private final boolean LETTER_MAPPING = true;
 	private final boolean NUMBER_MAPPING = false;
@@ -36,28 +35,13 @@ public class CryptoGame {
 		previousPhrase = null;
 		}
 	
-	public void setMappingType(boolean mappingType) {
-		this.mappingType = mappingType;
-	}
-	
 	public String getPhrase() {
 		return phrase;
 	}
 	
 	public int[] getGameMapping(){
-		if(mappingType==NUMBER_MAPPING) {
 			return gameMapping;
-		}else {
-			int[] letterMapping;
-			letterMapping = new int[26];
-			for(int index=0; index<gameMapping.length;index++) {
-				letterMapping[index] = gameMapping[index] + ASCII_a;
-			}
-			return letterMapping;
-		}
-		
-	}
-			
+	}		
 	
 	private void setGameMapping() {
 		
@@ -68,7 +52,6 @@ public class CryptoGame {
 		random = new Random(mappingSeed);
 		
 		generateMapping(random);
-			
 	}
 	
 	private void generateMapping(Random random) {
