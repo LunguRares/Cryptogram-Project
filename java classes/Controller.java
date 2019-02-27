@@ -13,8 +13,7 @@ public class Controller {
 		player = playerList.getPlayer(playerName);
 	}
 	
-	public void newGame(boolean LETTER_MAPPING) {
-		currentGame.setMappingType(LETTER_MAPPING);
+	public void newGame() {
 		currentGame.newGame();
 		player.startedNewGame();
 	}
