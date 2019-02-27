@@ -30,6 +30,10 @@ public class Controller {
 		return gameMapping;
 	}
 	
+	public int[] getPlayerMapping(){
+		return currentGame.getPlayerMapping();
+	}
+	
 	public int[] getLetterFrequency() {
 		int [] letterFrequency;
 		letterFrequency = currentGame.getLetterFrequency();
@@ -40,6 +44,10 @@ public class Controller {
 		boolean correctGuess;
 		correctGuess = currentGame.inputLetter(letter, guess);
 		player.playerGuess(correctGuess);
+	}
+	
+	public void undoLetter(int letter) {
+		currentGame.undoLetter(letter);
 	}
 	
 	public boolean checkCompletion() {
