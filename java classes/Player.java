@@ -47,7 +47,7 @@ public class Player implements Comparable<Player> {
     }
 
     private void updateRatio(){
-     winLossRatio = gamesPlayed/completedGames;
+     winLossRatio = completedGames/gamesPlayed;
     }
 
     public float getRatio(){
