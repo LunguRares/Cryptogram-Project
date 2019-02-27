@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -9,55 +10,88 @@ public class UserInterface {
 	private final int GAME_COMPLETED = 1;
 	private final int GAME_RUNNING = 0;
 
-	boolean letterMapping = false;
+	boolean letterMapping = true;
+	Scanner scanner; 
 	
 	Controller controller;
-	public UserInterface()
-	{
 	
+	public UserInterface(){
+		scanner = new Scanner(System.in);
 	}
 	
-	private void login()
-	{
+	private void login(){
 		System.out.println("Hi welcome to our cryptogram game, have fun!\nPlease enter your username or enter one if you don't already have one");
 		Scanner scan = new Scanner(System.in);
 		String playerName = scan.next();
 		controller = new Controller(playerName);
 	}
-	private void newGame()
-	{
+	private void newGame(){
+		
+		int gameState = GAME_RUNNING;
+		int userOption;
 		controller.newGame();
-		
-		display();
-		while(enterLetter()!=GAME_COMPLETED) {
+		while(gameState!=GAME_COMPLETED) {
 			display();
+			userOption = getPlayingUserOption();
+			switch (userOption){
+				case 1:
+					gameState = enterLetter();
+					break;
+				case 2:
+					gameState = undoLetter();
+					break;
+				default: 
+					System.out.println("Invalid user option");
+			}
+		}	
+		System.out.println("Hooray you are great you have successfully completed the cryptogram");
+	}
+	
+	private int getPlayingUserOption() {
+		printPlayingOptions();
+		try{
+			int option = scanner.nextInt();
+			if(option==1 || option==2) {
+				return option;
+			}else {
+				throw(new NoSuchElementException());
+			}
 		}
-		
+		catch(NoSuchElementException e) {
+			System.out.println("Invalid input please try again");
+			return getPlayingUserOption();
+		}
+	}
+	
+	private void printPlayingOptions() {
+		System.out.println("Please select an option;");
+		System.out.println("1.Enter a letter");
+		System.out.println("2.Undo a letter");
+		System.out.println();
+	}
+
+	private void loadGame(){
 		
 	}
 	
-	private void loadGame()
-	{
+	private void showLeaderboard(){
 		
 	}
-	private void showLeaderboard()
-	{
-		
-	}
+	
 	private void showStats()
 	{
 		
 	}
-	private void hint()
-	{
+	
+	private void hint(){
 		
 	}
-	private void showSolution()
-	{
+	
+	private void showSolution(){
 		
 	}
-	private int enterLetter()
-	{
+	
+	private int enterLetter(){
 		char letter,guess;
 		int[]gameMapping = controller.getGameMapping();
 		String phrase = controller.getPhrase();
@@ -67,8 +101,8 @@ public class UserInterface {
 		else 
 			System.out.println("\n\nPlease type the number you want replaced");
 
-		Scanner scanner = new Scanner(System.in);
-		letter = scanner.next().toLowerCase().charAt(0);
+		String input = scanner.next().toLowerCase();
+		letter = input.charAt(0);
 		 
 		if(checkValidLetter(letter)) { //ask for the guess
 			System.out.println("What letter would you like to replace it with ?");
@@ -78,17 +112,15 @@ public class UserInterface {
 				guess = scanner.next().toLowerCase().charAt(0);
 			}
 		}else {
-			scanner.close();
 			return enterLetter();
 		}		
-		
-		scanner.close();
 		controller.inputLetter(letter, guess);
 		if(controller.checkWin())
 			return GAME_COMPLETED;
 		else
 			return GAME_RUNNING;
 	}
+	
 	private boolean checkValidLetter(char letter) {
 		if(letter >=ASCII_a && letter <= ASCII_z){
 			int[] gameMapping = controller.getGameMapping();
@@ -105,6 +137,7 @@ public class UserInterface {
 		}
 		return false;
 	}
+	
 	private boolean checkValidGuess(char guess) {
 		if(guess >= ASCII_a && guess <= ASCII_z) {
 			return true;
@@ -112,53 +145,86 @@ public class UserInterface {
 		return false;
 	}
 
-	private void undo()
-	{
+	
+	private void undoLetter(){
+		char undoLetter;
+		System.out.println("Please enter what you want to undo");
+		String undoLine = scanner.next().toLowerCase();
+		undoLetter = undoLine.charAt(0);
+		checkValidUndo(undoLetter);
+		controller.undoLetter(undoLetter);
 		
 	}
-	private void refresh()
-	{
+	
+	
+	private void checkValidUndo(char undoLetter) {
+		int[] playerMapping = controller.getPlayerMapping();
+		for(int index = 0; index < playerMapping.length;index++){
+			if(playerMapping[index] == undoLetter) {
+				
+			}
+		}
 		
 	}
-	private void exit()
-	{
+
+	private void refresh(){
+		
+	}
+	
+	private void exit(){
 		//System.exit(0);
 	}
 	
-	private void display()
-	{	    
-		int[] gameMapping = controller.getGameMapping();
-		int[] letterFrequency = controller.getLetterFrequency();
-		String phrase = controller.getPhrase();	
+	private void display(){	    
+		displayPlayerGuess();
+		System.out.println();
+		displayGameMapping();
+		System.out.println();
+		displayLetterFrequency();
 		
+	}
+	
+	private void displayPlayerGuess() {
+		String phrase = controller.getPhrase();	
+		int [] playerMapping = controller.getPlayerMapping();
 		for(int i = 0; i < phrase.length(); i++ ){
 			char s = phrase.toLowerCase().charAt(i);
 			if(s == 32){
 					System.out.print("  ");
 			}else {
-				System.out.print("_ ");
+				if(playerMapping[s- ASCII_a] == NOT_MAPPED)
+					System.out.print("_ ");
+				else
+					System.out.print((char)(playerMapping[s - ASCII_a]+ASCII_a)+ " ");
 			}
 		}
-			
-		System.out.println();
+	}
+	
+	private void displayGameMapping() {
+		String phrase = controller.getPhrase();	
+		int[] gameMapping = controller.getGameMapping();
 		
 		for(int i = 0; i < phrase.length(); i++){
 			char s = phrase.toLowerCase().charAt(i);	
 			if(s == 32){
 					System.out.print("  ");
 			}else {
-				s -= 97;
-				System.out.print((char)(gameMapping[s]+97)+" ");
+				s -= ASCII_a;
+				System.out.print((char)(gameMapping[s]+ASCII_a)+" ");
 			}
 		}
-		System.out.println();
-		
+	}
+	
+	private void displayLetterFrequency() {
+		String phrase = controller.getPhrase();
+		int[] letterFrequency = controller.getLetterFrequency();
+	
 		for(int i = 0; i < phrase.length(); i++){
 			char s = phrase.toLowerCase().charAt(i);	
 			if(s == 32){
 					System.out.print("  ");
 			}else {
-				System.out.print(letterFrequency[s-97]+ " ");
+				System.out.print(letterFrequency[s-ASCII_a]+ " ");
 			}
 		}
 	}
@@ -169,6 +235,5 @@ public class UserInterface {
 		ui.login();
 		//Main menu loop
 		ui.newGame();
-	}
-	
+	}	
 }
