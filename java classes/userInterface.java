@@ -1,32 +1,38 @@
+import java.io.IOException;
 import java.util.Scanner;
 
 public class UserInterface {
 
 	final int NOT_MAPPED = -1;
-	Controller controller;
+	private final int ASCII_a = 97;
+	private final int ASCII_z = 122;
+	boolean letterMapping = false;
 	
-public UserInterface()
-{
-
-}
+	Controller controller;
+	public UserInterface()
+	{
+	
+	}
+	
 	public static void main(String[] args) 
 	{
 		UserInterface ui = new UserInterface();
 		ui.login();
+		ui.newGame();
+		//ui.display();
 		ui.enterLetter();
-		
 	}
+	
 	private void login()
 	{
-		System.out.println("Hi welcome to our cryptogram game, have fun!\nPlease enter your username");
+		System.out.println("Hi welcome to our cryptogram game, have fun!\nPlease enter your username or enter one if you don't already have one");
 		Scanner scan = new Scanner(System.in);
 		String playerName = scan.next();
-		controller.login(playerName);
-		
+		controller = new Controller(playerName);
 	}
 	private void newGame()
 	{
-		
+		controller.newGame(letterMapping);
 	}
 	private void loadGame()
 	{
@@ -50,13 +56,50 @@ public UserInterface()
 	}
 	private void enterLetter()
 	{
-		boolean letterMapping = false;
-		controller = new Controller("DRAKE");
-		controller.newGame(letterMapping);
-
+		char letter,guess;
+		display();	
+		int[]gameMapping = controller.getGameMapping();
+		String phrase = controller.getPhrase();
+		System.out.println("\n\nPlease type the letter you want replaced");
+		Scanner input = new Scanner(System.in);
+		
+		letter = input.next().toLowerCase().charAt(0);
+		
+		
+			if(letter >=ASCII_a && letter <= ASCII_z)
+			{
+				System.out.println("What letter would you like to replace it with ?");
+				
+				guess = input.next().toLowerCase().charAt(0);
+				
+				 if(!(guess>96 && guess <123))
+					{
+						System.out.println("Please enter a valid character");
+					}
+			}
+				
+		input.close();
+		//controller.inputLetter(letter, guess);
+	}
+	private void undo()
+	{
+		
+	}
+	private void refresh()
+	{
+		
+	}
+	private void exit()
+	{
+		//System.exit(0);
+	}
+	
+	private void display()
+	{	    
 		int[] gameMapping = controller.getGameMapping();
 		int[] letterFrequency = controller.getLetterFrequency();
 		String phrase = controller.getPhrase();	
+		
 		
 			for(int i = 0; i < phrase.length(); i++ )
 			{
@@ -96,47 +139,9 @@ public UserInterface()
 				}
 				else
 				{
-			
 					System.out.print(letterFrequency[s-97]+ " ");
 				}
 			}
-		System.out.println("\n\nPlease type the letter you want replaced");
-		Scanner input = new Scanner(System.in);
-		
-		char letter = input.next().toLowerCase().charAt(0);
-		
-		for(int i = 0 ; i < 26; i++)
-		{
-			if(letter-97 == gameMapping[i])
-			{
-				System.out.println("What letter would you like to replace it with ?");
-				char guess = input.next().toLowerCase().charAt(0);
-				
-				 if(!(guess>96 && guess <123))
-					{
-						System.out.println("Please enter a valid character");
-					}
-				 for(int j = 0; j < phrase.length(); j++)
-				 {
-					 
-				 }
-			}
-		}
-				
-		input.close();
-		//controller.inputLetter(letter, guess);
-	}
-	private void undo()
-	{
-		
-	}
-	private void refresh()
-	{
-		
-	}
-	private void exit()
-	{
-		System.exit(0);
 	}
 }
 	
