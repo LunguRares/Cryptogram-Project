@@ -1,9 +1,8 @@
-import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class UserInterface {
-
+	
 	final int NOT_MAPPED = -1;
 	private final int ASCII_a = 97;
 	private final int ASCII_z = 122;
@@ -38,7 +37,8 @@ public class UserInterface {
 					gameState = enterLetter();
 					break;
 				case 2:
-					gameState = undoLetter();
+					undoLetter();
+					gameState = GAME_RUNNING;
 					break;
 				default: 
 					System.out.println("Invalid user option");
@@ -97,9 +97,9 @@ public class UserInterface {
 		String phrase = controller.getPhrase();
 		
 		if(letterMapping)
-			System.out.println("\n\nPlease type the letter you want replaced");
+			System.out.println("\nPlease type the letter you want replaced");
 		else 
-			System.out.println("\n\nPlease type the number you want replaced");
+			System.out.println("\nPlease type the number you want replaced");
 
 		String input = scanner.next().toLowerCase();
 		letter = input.charAt(0);
@@ -112,6 +112,7 @@ public class UserInterface {
 				guess = scanner.next().toLowerCase().charAt(0);
 			}
 		}else {
+			System.out.println("Invalid choice of letter selected");
 			return enterLetter();
 		}		
 		controller.inputLetter(letter, guess);
@@ -148,22 +149,27 @@ public class UserInterface {
 	
 	private void undoLetter(){
 		char undoLetter;
-		System.out.println("Please enter what you want to undo");
+		System.out.println("Please enter the letter you want to undo");
 		String undoLine = scanner.next().toLowerCase();
 		undoLetter = undoLine.charAt(0);
-		checkValidUndo(undoLetter);
-		controller.undoLetter(undoLetter);
-		
+		if(checkValidUndo(undoLetter)) {
+			controller.undoLetter(undoLetter - ASCII_a);
+		}else {
+			System.out.println("Invalid undo");
+			undoLetter();
+		}
 	}
 	
 	
-	private void checkValidUndo(char undoLetter) {
+	private boolean checkValidUndo(char undoLetter) {
 		int[] playerMapping = controller.getPlayerMapping();
+		int numUndoLetter = undoLetter - ASCII_a;
 		for(int index = 0; index < playerMapping.length;index++){
-			if(playerMapping[index] == undoLetter) {
-				
+			if(playerMapping[index] == numUndoLetter) {
+					return true;
 			}
 		}
+		return false;
 		
 	}
 
@@ -181,7 +187,8 @@ public class UserInterface {
 		displayGameMapping();
 		System.out.println();
 		displayLetterFrequency();
-		
+		System.out.println();
+
 	}
 	
 	private void displayPlayerGuess() {
