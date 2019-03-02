@@ -62,4 +62,7 @@ public class Controller {
 		return currentGame.checkAlreadyMapped(guess);
 	}
 	
+	public boolean checkValueAlreadyMapped(int value) {
+		return currentGame.checkValueAlreadyMapped(value);
+	}
 }
