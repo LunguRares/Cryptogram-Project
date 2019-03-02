@@ -8,6 +8,8 @@ public class UserInterface {
 	private final int ASCII_z = 122;
 	private final int GAME_COMPLETED = 1;
 	private final int GAME_RUNNING = 0;
+	private final int GAME_COMPLETED_WIN = 2;
+	private final int GAME_COMPLETED_LOSS = 3;
 
 	boolean letterMapping = true;
 	Scanner scanner; 
@@ -30,7 +32,7 @@ public class UserInterface {
 		int userOption;
 		controller.newGame();
 		getMappingType();
-		while(gameState!=GAME_COMPLETED) {
+		while(gameState==GAME_RUNNING) {
 			display();
 			userOption = getPlayingUserOption();
 			switch (userOption){
@@ -44,8 +46,13 @@ public class UserInterface {
 				default: 
 					System.out.println("Invalid user option");
 			}
-		}	
-		System.out.println("Hooray you are great you have successfully completed the cryptogram");
+		}
+		
+		if(gameState==GAME_COMPLETED_WIN){
+			System.out.println("Hooray you are great you have successfully completed the cryptogram");
+		}else {
+			System.out.println("Unfortunately your cryptogram asnwer was incorrect");
+		}
 	}
 	
 	private void getMappingType() {
@@ -59,7 +66,6 @@ public class UserInterface {
 			letterMapping = true;
 		}else
 			letterMapping = false;
-
 	}
 
 	private int getInput(int NoOptions) {
@@ -84,15 +90,12 @@ public class UserInterface {
 		catch(NoSuchElementException e) {
 			System.out.println("Invalid input please try again");
 			return getInput(NoOptions);
-		}
-	
-		
+		}	
 	}
 
 	private int getPlayingUserOption() {
 		printPlayingOptions();
 		return getInput(2);
-
 	}
 	
 	private void printPlayingOptions() {
@@ -110,8 +113,7 @@ public class UserInterface {
 		
 	}
 	
-	private void showStats()
-	{
+	private void showStats(){
 		
 	}
 	
@@ -154,10 +156,16 @@ public class UserInterface {
 			return enterLetter();
 		}		
 		controller.inputLetter(letter, guess);
-		if(controller.checkWin())
-			return GAME_COMPLETED;
-		else
+		if(controller.checkCompletion())
+		{
+			if(controller.checkWin()){
+				return GAME_COMPLETED_WIN;
+			}else {
+				return GAME_COMPLETED_LOSS;
+			}
+		}else {
 			return GAME_RUNNING;
+		}
 	}
 	
 	private boolean checkValidLetter(char letter) {
