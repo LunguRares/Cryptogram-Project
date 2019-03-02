@@ -182,7 +182,7 @@ public class CryptoGame {
 		guessNum = guess - ASCII_a;
 		
 		for(int index=0;index<playerMapping.length;index++) {
-			if(playerMapping[index]==guessNum)
+			if(playerMapping[index]==guessNum && letterFrequency[index]!=0)
 				alreadyMapped = true;
 		}
 		
