@@ -271,11 +271,12 @@ public class UserInterface {
 		}
 	}
 	
-	private boolean checkValidUndo(char undoLetter) {
+    private boolean checkValidUndo(char undoLetter) {
 		int[] playerMapping = controller.getPlayerMapping();
+		int[] letterFrequency = controller.getLetterFrequency();
 		int numUndoLetter = undoLetter - ASCII_a;
 		for(int index = 0; index < playerMapping.length;index++){
-			if(playerMapping[index] == numUndoLetter) {
+			if(playerMapping[index] == numUndoLetter && letterFrequency[index]!=0) {
 					return true;
 			}
 		}
