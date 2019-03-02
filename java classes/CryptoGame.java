@@ -14,9 +14,6 @@ public class CryptoGame {
 	private int[] playerMapping;
 	private int[] letterFrequency;
 	private int mappingSeed;
-	
-	private final boolean LETTER_MAPPING = true;
-	private final boolean NUMBER_MAPPING = false;
 
 	private final int ASCII_a = 97;
 	private final int ASCII_z = 122;
@@ -160,8 +157,10 @@ public class CryptoGame {
 		int letterNum;
 		int guessNum;
 		
-		if(LETTER_MAPPING)
-		letterNum = letter - ASCII_a;
+		if(letter>=ASCII_a)
+			letterNum = letter - ASCII_a;
+		else
+			letterNum = letter - 1;
 		
 		guessNum = guess - ASCII_a;
 
@@ -187,6 +186,26 @@ public class CryptoGame {
 				alreadyMapped = true;
 		}
 		
+		return alreadyMapped;
+	}
+	
+	public boolean checkValueAlreadyMapped(int value) {
+		boolean alreadyMapped = true;
+		
+		if(value>=ASCII_a)
+			value = value - ASCII_a;
+		else
+			value = value - 1;
+		
+		for(int index=0;index<gameMapping.length;index++) {
+			if(gameMapping[index]==value) {
+				if(playerMapping[index]==NOT_MAPPED)
+					alreadyMapped = false;
+				else
+					alreadyMapped = true;
+			break;
+			}
+		}
 		return alreadyMapped;
 	}
 
