@@ -1,15 +1,15 @@
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.lang.Math;
 
 public class UserInterface {
 	
 	final int NOT_MAPPED = -1;
 	private final int ASCII_a = 97;
 	private final int ASCII_z = 122;
-	private final int GAME_COMPLETED = 1;
 	private final int GAME_RUNNING = 0;
+	private final int GAME_COMPLETED = 1;
 	private final int GAME_COMPLETED_WIN = 2;
-	private final int GAME_COMPLETED_LOSS = 3;
 
 	boolean letterMapping = true;
 	Scanner scanner; 
@@ -22,8 +22,8 @@ public class UserInterface {
 	
 	private void login(){
 		System.out.println("Hi welcome to our cryptogram game, have fun!\nPlease enter your username or enter one if you don't already have one");
-		Scanner scan = new Scanner(System.in);
-		String playerName = scan.next();
+		scanner = new Scanner(System.in);
+		String playerName = scanner.next();
 		controller = new Controller(playerName);
 	}
 	private void newGame(){
@@ -33,11 +33,12 @@ public class UserInterface {
 		controller.newGame();
 		getMappingType();
 		while(gameState==GAME_RUNNING) {
-			display();
+			displayPlayingMenu();
 			userOption = getPlayingUserOption();
 			switch (userOption){
 				case 1:
-					gameState = enterLetter();
+					enterLetter();
+					gameState = checkWin();
 					break;
 				case 2:
 					undoLetter();
@@ -46,29 +47,40 @@ public class UserInterface {
 				default: 
 					System.out.println("Invalid user option");
 			}
-		}
-		
-		if(gameState==GAME_COMPLETED_WIN){
-			System.out.println("Hooray you are great you have successfully completed the cryptogram");
-		}else {
-			System.out.println("Unfortunately your cryptogram asnwer was incorrect");
-		}
+		}	
 	}
 	
+	private int checkWin() {
+		if(controller.checkCompletion()){
+			if(controller.checkWin()){
+				System.out.println("Hooray you are great you have successfully completed the cryptogram");
+				return GAME_COMPLETED_WIN;
+			}else {
+				System.out.println("Sorry but this is not the correct phrase. Try again");
+				return GAME_RUNNING;
+			}
+		}else {
+			return GAME_RUNNING;
+		}
+	}
+
+	
+
 	private void getMappingType() {
 		System.out.println("Please select the mapping type:");
 		System.out.println("1. Letter Mapping");
 		System.out.println("2. Number Mapping");
 		
-		int option = getInput(2);
+		int option = getOption(2);
 		
 		if(option==1) {
 			letterMapping = true;
 		}else
 			letterMapping = false;
+
 	}
 
-	private int getInput(int NoOptions) {
+	private int getOption(int NoOptions) {
 		
 		try{
 			String input = scanner.next();
@@ -89,13 +101,16 @@ public class UserInterface {
 			}
 		catch(NoSuchElementException e) {
 			System.out.println("Invalid input please try again");
-			return getInput(NoOptions);
-		}	
+			return getOption(NoOptions);
+		}
+	
+		
 	}
 
 	private int getPlayingUserOption() {
 		printPlayingOptions();
-		return getInput(2);
+		return getOption(2);
+
 	}
 	
 	private void printPlayingOptions() {
@@ -113,7 +128,8 @@ public class UserInterface {
 		
 	}
 	
-	private void showStats(){
+	private void showStats()
+	{
 		
 	}
 	
@@ -125,10 +141,7 @@ public class UserInterface {
 		
 	}
 	
-	private int enterLetter(){
-		char letter,guess;
-		int[]gameMapping = controller.getGameMapping();
-		String phrase = controller.getPhrase();
+	private void enterLetter(){
 		
 		if(letterMapping)
 			System.out.println("\nPlease type the letter you want replaced");
@@ -136,60 +149,105 @@ public class UserInterface {
 			System.out.println("\nPlease type the number you want replaced");
 
 		String input = scanner.next().toLowerCase();
-		
-		if(input.length()==1)
-			letter = input.charAt(0);
-		else {
-			System.out.println("Error: Invalid input");
-			return enterLetter();
-		}
-		 
-		if(checkValidLetter(letter)) { //ask for the guess
-			System.out.println("What letter would you like to replace it with ?");
-			guess = scanner.next().toLowerCase().charAt(0);
-			while(!checkValidGuess(guess)) {
-				System.out.println("Please enter a valid letter");
-				guess = scanner.next().toLowerCase().charAt(0);
-			}
-		}else {
-			System.out.println("Invalid choice of letter selected");
-			return enterLetter();
-		}		
-		controller.inputLetter(letter, guess);
-		if(controller.checkCompletion())
-		{
-			if(controller.checkWin()){
-				return GAME_COMPLETED_WIN;
-			}else {
-				return GAME_COMPLETED_LOSS;
-			}
-		}else {
-			return GAME_RUNNING;
-		}
-	}
-	
-	private boolean checkValidLetter(char letter) {
-		if(letter >=ASCII_a && letter <= ASCII_z){
-			int[] gameMapping = controller.getGameMapping();
-			int letterNumber = letter - ASCII_a;
-			for(int index=0;index<gameMapping.length;index++) {
-				if(gameMapping[index]==letterNumber) {
-					int[] letterFrequency = controller.getLetterFrequency();
-					if(letterFrequency[index]!=0)
-						return true;
-					else
-						return false;
+		if(validLetterOrNumber(input)) {
+			if(valueIsAlreadyMapped(input)) {
+				System.out.println("Existing mapping dettected. Please select an option:");
+				System.out.println("1. Overwrite the existing mapping?");
+				System.out.println("2.Keep the current mapping?");
+				int option = getOption(2);
+				if(option==2) {
+					return;
 				}
 			}
+			getAndMakeGuess(input);
+		}else {
+			System.out.println("Invalid letter/number, please try again");
 		}
-		return false;
 	}
 	
-	private boolean checkValidGuess(char guess) {
-		if(guess >= ASCII_a && guess <= ASCII_z) {
-			return true;
+	private void getAndMakeGuess(String input) {
+		
+		System.out.println("What letter would you like to replace it with ?");
+		String guessInput = scanner.next().toLowerCase();
+		if(guessIsValid(guessInput)) {
+			int letter;
+			char guess;
+			
+			if(letterMapping)
+				letter = input.charAt(0);
+			else {
+				Scanner scanner = new Scanner(input);
+				letter = scanner.nextInt();
+				scanner.close();
+			}
+			guess = guessInput.charAt(0);
+			controller.inputLetter(letter, guess);
+		}else {
+			System.out.println("Invalid guess");
+			return;
 		}
-		return false;
+		
+		
+	}
+
+	private boolean valueIsAlreadyMapped(String input) {
+		if(letterMapping) {
+			return controller.checkValueAlreadyMapped(input.charAt(0));
+		}else {
+			Scanner scanner = new Scanner(input);
+			int value = scanner.nextInt();
+			scanner.close();
+			return controller.checkValueAlreadyMapped(value);	
+		}
+		
+	}
+
+	private boolean validLetterOrNumber(String input) {
+		int inputNumber;
+		
+		if(letterMapping) {
+			if(input.length()==1) {
+				inputNumber = input.charAt(0)-ASCII_a;
+			}else
+				return false;
+		}else {
+			Scanner scanner = new Scanner(input);
+			if(scanner.hasNextInt()) {
+				inputNumber = scanner.nextInt()-1;
+				scanner.close();
+			} else {
+				scanner.close();
+				return false;
+			}
+		}
+		if(inputNumber<0 || inputNumber>25) 
+			return false;
+		
+		int[] gameMapping = controller.getGameMapping();
+		String pottentialValidInput = null;
+		for(int index=0;index<gameMapping.length;index++) {
+			if(gameMapping[index]==inputNumber) {
+				pottentialValidInput = (char)(index+ASCII_a) + "";
+				break;
+			}
+		}
+	
+		String phrase = controller.getPhrase();
+		return phrase.contains(pottentialValidInput);
+	}
+	
+	private boolean guessIsValid(String guessInput) {
+		if(guessInput.length()==1) {
+			char guess = guessInput.charAt(0);
+			if(guess >= ASCII_a && guess <= ASCII_z) {//Guess is a letter of the alphabet
+				if(controller.checkAlreadyMapped(guess))
+					return false;
+				else
+					return true;
+			}
+			return false;
+		}
+		return false;	
 	}
 
 	
@@ -214,7 +272,6 @@ public class UserInterface {
 		}
 	}
 	
-	
 	private boolean checkValidUndo(char undoLetter) {
 		int[] playerMapping = controller.getPlayerMapping();
 		int numUndoLetter = undoLetter - ASCII_a;
@@ -223,25 +280,21 @@ public class UserInterface {
 					return true;
 			}
 		}
-		return false;
-		
-	}
-
-	private void refresh(){
-		
+		return false;	
 	}
 	
 	private void exit(){
 		//System.exit(0);
 	}
 	
-	private void display(){	    
+	private void displayPlayingMenu(){	    
+		System.out.println();
 		displayPlayerGuess();
 		System.out.println();
 		displayGameMapping();
 		System.out.println();
 		displayLetterFrequency();
-		System.out.println();
+		System.out.println("\n");
 
 	}
 	
@@ -255,9 +308,8 @@ public class UserInterface {
 			}else {
 				if(playerMapping[s- ASCII_a] == NOT_MAPPED)
 					System.out.print("__ ");
-				else
-					if(letterMapping){
-						System.out.print((char)(playerMapping[s - ASCII_a]+ASCII_a)+ "  ");
+				else{
+					System.out.print((char)(playerMapping[s - ASCII_a]+ASCII_a)+"  ");
 					}
 			}
 		}
