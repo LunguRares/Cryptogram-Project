@@ -52,7 +52,7 @@ public class UserInterface {
 	private int checkWin() {
 		if(controller.checkCompletion()){
 			if(controller.checkWin()){
-				System.out.println("Hooray you are great you have successfully completed the cryptogram");
+				System.out.println("Well done you have successfully completed the cryptogram");
 				return GAME_COMPLETED_WIN;
 			}else {
 				System.out.println("Sorry but this is not the correct phrase. Try again");
