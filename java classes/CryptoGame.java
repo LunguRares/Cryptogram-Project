@@ -212,7 +212,7 @@ public class CryptoGame {
 	public void undoLetter(int letter) {
 		
 		for(int index=0;index<playerMapping.length;index++) {
-			if(playerMapping[index] == letter) {
+			if(playerMapping[index] == letter && letterFrequency[index]!=0) {
 				playerMapping[index] = NOT_MAPPED;
 			}
 		}
