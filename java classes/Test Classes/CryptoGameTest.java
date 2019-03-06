@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
+
+import javax.management.monitor.GaugeMonitorMBean;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -16,6 +19,9 @@ class CryptoGameTest {
 
 	CryptoGame game;
 	private final String PHRASES_FILE = "phrases.txt";
+	private final int NOT_MAPPED = -1;
+	private final int ASCII_a = 97;
+
 
 	
 	@BeforeEach
@@ -150,13 +156,71 @@ class CryptoGameTest {
 	}
 
 	@Test
-	void testInputLetter() {
-		fail("Not yet implemented");
+	void testInputLetterMapping() {
+		boolean letterNotSet;
+		game.newGame();
+		int[] playerMapping = game.getPlayerMapping();
+		for(int i=0;i<playerMapping.length;i++) {
+			letterNotSet = true;
+			if(!(playerMapping[i]==NOT_MAPPED || playerMapping[i]==i))
+				letterNotSet = false;
+			assertEquals(true, letterNotSet);
+		}
+		Random random = new Random();
+		int letter;
+		char guess;
+		
+		letter = random.nextInt(26)+ASCII_a;
+		guess = (char)(random.nextInt(26)+ASCII_a);
+		
+		game.inputLetter(letter, guess);
+		playerMapping = game.getPlayerMapping();
+		
+		int[] gameMapping = game.getGameMapping();
+		boolean letterGotMapped = false;
+		
+		for(int i=0;i<gameMapping.length;i++)
+			if(gameMapping[i] == letter-ASCII_a) {
+				if(playerMapping[i]==(guess-ASCII_a))
+					letterGotMapped = true;
+				break;
+			}
+		
+		assertEquals(true, letterGotMapped);
+
+	}
+	
+	@Test
+	void testInputNumberMapping() {
+		game.newGame();
+		int[] playerMapping;
+		Random random = new Random();
+		int letter;
+		char guess;
+		
+		letter = random.nextInt(26)+1;
+		guess = (char)(random.nextInt(26)+ASCII_a);
+		
+		game.inputLetter(letter, guess);
+		playerMapping = game.getPlayerMapping();
+		
+		int[] gameMapping = game.getGameMapping();
+		boolean letterGotMapped = false;
+		
+		for(int i=0;i<gameMapping.length;i++)
+			if(gameMapping[i] == letter-1) {
+				if(playerMapping[i]==(guess-ASCII_a))
+					letterGotMapped = true;
+				break;
+			}
+		
+		assertEquals(true, letterGotMapped);
+
 	}
 
 	@Test
 	void testCheckAlreadyMapped() {
-		fail("Not yet implemented");
+		game.newGame();
 	}
 
 	@Test
