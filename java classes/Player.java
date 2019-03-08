@@ -1,13 +1,13 @@
 public class Player implements Comparable<Player> {
-    private final boolean WIN = false;
+    private final boolean WIN = true;
     private String name;
     private int completedGames;
     private int gamesPlayed;
     private int totalGuesses;
     private int correctGuesses;
-    private float winLossRatio;
+    private double winLossRatio;
 
-    public Player(String playerName, int gamesCompleted, int playedGames, int guessesTotal, int guessesCorrect, float ratio){
+    public Player(String playerName, int gamesCompleted, int playedGames, int guessesTotal, int guessesCorrect, double ratio){
         name = playerName;
         completedGames = gamesCompleted;
         gamesPlayed = playedGames;
@@ -47,10 +47,16 @@ public class Player implements Comparable<Player> {
     }
 
     private void updateRatio(){
-     winLossRatio = completedGames/gamesPlayed;
+    	if (completedGames == 0) {
+    		winLossRatio = 0;
+    	}else {
+    		winLossRatio = (double)completedGames/(double)gamesPlayed;
+    		winLossRatio = Math.round(winLossRatio * 100.0) / 100.0;
+    	}
+     System.out.println("your winloss is now " + winLossRatio);
     }
 
-    public float getRatio(){
+    public double getRatio(){
         return winLossRatio;
     }
 
@@ -73,8 +79,8 @@ public class Player implements Comparable<Player> {
     }
 
     public int compareTo(Player playerTwo) {
-        Float ratioOne = this.getRatio();
-        Float ratioTwo = playerTwo.getRatio();
+        Double ratioOne = this.getRatio();
+        Double ratioTwo = playerTwo.getRatio();
         return ratioOne.compareTo(ratioTwo);
     }
 }
