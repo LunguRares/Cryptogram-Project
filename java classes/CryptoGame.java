@@ -1,15 +1,17 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 
 public class CryptoGame {
+	private final String GAME_STATS_FILE = "gameStats";
 	private String phrase;
 	private String playerName;
-	private String previousPhrase;
 	private int[] gameMapping;
 	private int[] playerMapping;
 	private int[] letterFrequency;
@@ -19,7 +21,7 @@ public class CryptoGame {
 	private final int ASCII_z = 122;
 	private final int NOT_MAPPED = -1;
 	private final int EXIT_FAILURE = -1;
-	private final String PHRASES_FILE = "phrases.txt";
+	private final String PHRASES_FILE = "phrases";
 
 	
 	public CryptoGame(String playerName) {
@@ -29,7 +31,6 @@ public class CryptoGame {
 		playerMapping = new int[26];
 		gameMapping = new int[26];
 		phrase = null;
-		previousPhrase = null;
 		}
 	
 	public String getPhrase() {
@@ -100,7 +101,6 @@ public class CryptoGame {
 		setGameMapping();
 		setLetterFrequency();
 		setInitialPlayerMapping();
-		previousPhrase = phrase;
 		System.out.println("New CryptoGame successfully created.");
 	}
 	
@@ -255,5 +255,65 @@ public class CryptoGame {
 				gameWon = false;
 			}
 		return gameWon;
+	}
+	
+	public void saveGame() {
+			
+		BufferedWriter fileWriter;
+		File gameStatusFile;
+		
+		String lineToSave;
+		lineToSave = playerName + "," + phrase + "," + mappingSeed + ",";
+		
+		for(int index=0;index<playerMapping.length;index++) {
+			lineToSave = lineToSave + playerMapping[index] + ",";
+		}
+		
+		lineToSave = lineToSave + '\n';
+		
+		try {
+			gameStatusFile = saveOtherGames(); 
+			fileWriter = new BufferedWriter(new FileWriter(gameStatusFile));
+			fileWriter.write(lineToSave);
+			fileWriter.close();
+			 
+		}catch(Exception e) {
+			System.out.println("Error: The file "+GAME_STATS_FILE+" doesn't exist.");
+			System.exit(EXIT_FAILURE);
+		}
+		
+		System.out.println("Game successfully saved.");
+		
+	}
+
+	private File saveOtherGames() {
+		BufferedWriter fileWriter;
+		BufferedReader fileReader;
+		
+		File oldGameStatusFile = new File(GAME_STATS_FILE);
+		File newGameStatusFile = new File(GAME_STATS_FILE+"1");
+		try {
+			fileReader = new BufferedReader(new FileReader(oldGameStatusFile));
+			fileWriter = new BufferedWriter(new FileWriter(newGameStatusFile));
+			String line = fileReader.readLine();
+			while(line!=null) {
+				if(!line.contains(playerName)) {
+					fileWriter.write(line+"\n");
+				}
+				line = fileReader.readLine();
+			}
+			fileReader.close();
+			fileWriter.close();
+			
+		}
+		catch(Exception e) {
+			System.out.println("Error: Error occured when trying to save the game.");
+			System.exit(EXIT_FAILURE);
+		}
+		
+		oldGameStatusFile.delete();
+		newGameStatusFile.renameTo(oldGameStatusFile);
+		
+		return newGameStatusFile;	
 	}
 }
