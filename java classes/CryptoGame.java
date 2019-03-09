@@ -6,10 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
 
 
 public class CryptoGame {
-	private final String GAME_STATS_FILE = "gameStats";
+	private final String GAME_STATS_FILE = "gameStats.txt";
 	private String phrase;
 	private String playerName;
 	private int[] gameMapping;
@@ -21,7 +22,10 @@ public class CryptoGame {
 	private final int ASCII_z = 122;
 	private final int NOT_MAPPED = -1;
 	private final int EXIT_FAILURE = -1;
-	private final String PHRASES_FILE = "phrases";
+	private final int ONLY_ONE_PHRASE_IN_FILE = 1;
+	private final String PHRASES_FILE = "phrases.txt";
+	private final String NO_PREVIOUS_PHRASE = null;
+
 
 	
 	public CryptoGame(String playerName) {
@@ -30,9 +34,36 @@ public class CryptoGame {
 		letterFrequency = new int[26];
 		playerMapping = new int[26];
 		gameMapping = new int[26];
-		phrase = null;
+		phrase = getPreviousPhrase();
 		}
 	
+	private String getPreviousPhrase() {
+		BufferedReader fileReader;
+		File gameStatsFile;
+		String phrase = NO_PREVIOUS_PHRASE;
+		
+		
+		try {
+			gameStatsFile = new File(GAME_STATS_FILE);
+			fileReader = new BufferedReader(new FileReader(gameStatsFile));
+			String line = fileReader.readLine();
+			Scanner scanner;
+			while(line!=null) {
+				scanner = new Scanner(line);
+				scanner.useDelimiter(",");
+				if(scanner.next().equals(playerName)) {
+					phrase = scanner.next();
+					break;
+				}
+				line = fileReader.readLine();
+			}
+		}
+		catch(Exception e) {
+			System.out.println("Error when trying to load the previous sentence");
+		}
+		return phrase;
+	}
+
 	public String getPhrase() {
 		return phrase;
 	}
@@ -86,7 +117,11 @@ public class CryptoGame {
 			System.exit(EXIT_FAILURE);
 		}else {
 			Random random = new Random();
-			this.phrase = phrases.get(random.nextInt(noPhrases));
+			String potentialPhrase = phrases.get(random.nextInt(noPhrases));
+			if(phrases.size()!=ONLY_ONE_PHRASE_IN_FILE)
+				while(phrase.equals(potentialPhrase))
+					potentialPhrase =  phrases.get(random.nextInt(noPhrases));
+			phrase = potentialPhrase;
 		}
 		
 	}
@@ -261,59 +296,54 @@ public class CryptoGame {
 			
 		BufferedWriter fileWriter;
 		File gameStatusFile;
-		
+		ArrayList<String> linesToSave = getLinesToSave(); 
 		String lineToSave;
+		
 		lineToSave = playerName + "," + phrase + "," + mappingSeed + ",";
 		
 		for(int index=0;index<playerMapping.length;index++) {
 			lineToSave = lineToSave + playerMapping[index] + ",";
 		}
-		
-		lineToSave = lineToSave + '\n';
+		linesToSave.add(lineToSave);
 		
 		try {
-			gameStatusFile = saveOtherGames(); 
+			gameStatusFile = new File(GAME_STATS_FILE);
 			fileWriter = new BufferedWriter(new FileWriter(gameStatusFile));
-			fileWriter.write(lineToSave);
+			for(int index=0;index<linesToSave.size();index++) {
+				fileWriter.write(linesToSave.get(index));
+				fileWriter.newLine();
+			}
 			fileWriter.close();
 			 
 		}catch(Exception e) {
-			System.out.println("Error: The file "+GAME_STATS_FILE+" doesn't exist.");
+			System.out.println("Error while trying to create "+ GAME_STATS_FILE);
 			System.exit(EXIT_FAILURE);
 		}
 		
 		System.out.println("Game successfully saved.");
 		
 	}
-
-	private File saveOtherGames() {
-		BufferedWriter fileWriter;
+	
+	private ArrayList<String> getLinesToSave(){
+		ArrayList<String> linesToSave = new ArrayList<>();
 		BufferedReader fileReader;
+		File gameStatusFile;
 		
-		File oldGameStatusFile = new File(GAME_STATS_FILE);
-		File newGameStatusFile = new File(GAME_STATS_FILE+"1");
 		try {
-			fileReader = new BufferedReader(new FileReader(oldGameStatusFile));
-			fileWriter = new BufferedWriter(new FileWriter(newGameStatusFile));
+			gameStatusFile = new File(GAME_STATS_FILE);
+			fileReader = new BufferedReader(new FileReader(gameStatusFile));
 			String line = fileReader.readLine();
 			while(line!=null) {
-				if(!line.contains(playerName)) {
-					fileWriter.write(line+"\n");
-				}
+				if(!line.contains(playerName))
+					linesToSave.add(line);
 				line = fileReader.readLine();
 			}
-			fileReader.close();
-			fileWriter.close();
-			
-		}
-		catch(Exception e) {
-			System.out.println("Error: Error occured when trying to save the game.");
-			System.exit(EXIT_FAILURE);
-		}
-		
-		oldGameStatusFile.delete();
-		newGameStatusFile.renameTo(oldGameStatusFile);
-		
-		return newGameStatusFile;	
+			fileReader.close(); 
+		}catch(Exception e) {
+			System.out.println("Error: The file "+GAME_STATS_FILE+" doesn't exist.");
+			System.out.println("Creating the file now");
+		}		
+		return linesToSave;
 	}
+
 }
