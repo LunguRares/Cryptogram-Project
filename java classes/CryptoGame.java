@@ -24,7 +24,7 @@ public class CryptoGame {
 	private final int EXIT_FAILURE = -1;
 	private final int ONLY_ONE_PHRASE_IN_FILE = 1;
 	private final String PHRASES_FILE = "phrases.txt";
-	private final String NO_PREVIOUS_PHRASE = null;
+	private final String NO_PREVIOUS_PHRASE = "";
 
 
 	
@@ -52,8 +52,13 @@ public class CryptoGame {
 				scanner = new Scanner(line);
 				scanner.useDelimiter(",");
 				if(scanner.next().equals(playerName)) {
-					phrase = scanner.next();
-					break;
+					if(scanner.hasNext()) {
+						phrase = scanner.next();
+						break;
+					}else {
+						System.out.println("Error occured when trying to load the previous sentence");
+						break;
+					}
 				}
 				line = fileReader.readLine();
 			}
@@ -128,7 +133,56 @@ public class CryptoGame {
 	
 	public boolean loadGame() {
 		
-		return false;
+		BufferedReader fileReader;
+		File gameStatsFile;
+		boolean savedGameExists = false;
+		boolean validPlayerMappings = true;
+		
+		
+		try {
+			gameStatsFile = new File(GAME_STATS_FILE);
+			fileReader = new BufferedReader(new FileReader(gameStatsFile));
+			String line = fileReader.readLine();
+			Scanner scanner;
+			while(line!=null) {
+				scanner = new Scanner(line);
+				scanner.useDelimiter(",");
+				if(scanner.next().equals(playerName)) {
+					if(scanner.hasNext()) {
+						phrase = scanner.next();
+						if(scanner.hasNextInt()) {
+							mappingSeed = scanner.nextInt();
+							for(int i=0;i<playerMapping.length;i++) {
+								if(scanner.hasNextInt()) {
+									playerMapping[i] = scanner.nextInt();
+									if(playerMapping[i]<0 || playerMapping[i]>26) {
+										System.out.println("Error occured when trying to load the player mapping");
+										validPlayerMappings = false;
+										break;
+									}
+								}
+							}
+							if(validPlayerMappings) {
+								savedGameExists = true;
+								scanner.close();
+								fileReader.close();
+								return savedGameExists;
+							}
+						}else {
+							System.out.println("Error occured when trying to load the mapping seed");
+						}
+					}else {
+						System.out.println("Error occured when trying to load the previous sentence");
+					}
+				}
+				line = fileReader.readLine();
+			}
+		}
+		catch(Exception e) {
+			System.out.println("Error occured when trying to load the previous game");
+		}
+		
+		return savedGameExists;
 	}
 	
 	public void newGame() {
