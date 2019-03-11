@@ -1,3 +1,5 @@
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -26,6 +28,8 @@ public class UserInterface {
 		controller = new Controller(playerName);
 	}
 	private void newGame(){
+		
+		//displayLeaderboard();
 		
 		int gameState = GAME_RUNNING;
 		int userOption;
@@ -64,6 +68,13 @@ public class UserInterface {
 	}
 
 	
+	private void diplayHomeMenu()
+	{
+		System.out.println("Welcome to Fun with Cryptograms");
+		System.out.println("Please choose one of the following options");
+		System.out.println("1. ")
+		
+	}
 
 	private void getMappingType() {
 		System.out.println("Please select the mapping type:");
@@ -124,6 +135,12 @@ public class UserInterface {
 	}
 	
 	private void showLeaderboard(){
+	String[] leaderboard = controller.getLeaderboard();
+		
+		for(int i =0; i < leaderboard.length; i++)
+		{
+			System.out.println(leaderboard[i]);
+		}
 		
 	}
 	
@@ -355,6 +372,8 @@ public class UserInterface {
 			}
 		}
 	}
+	
+
 	
 	public static void main(String[] args) 
 	{
