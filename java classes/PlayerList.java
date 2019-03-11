@@ -35,7 +35,7 @@ public class PlayerList {
         }
 
         for (int i = 0;i<10;i++){
-            leaderBoard[i] = players.get(i).getName();
+            leaderBoard[i] = players.get(players.size()-i-1).getName();
         }
         return leaderBoard;
     }
