@@ -163,10 +163,12 @@ public class CryptoGame {
 								}
 							}
 							if(validPlayerMappings) {
-								savedGameExists = true;
 								scanner.close();
 								fileReader.close();
-								return savedGameExists;
+								if(!checkWin()) {
+									savedGameExists = true;
+									return savedGameExists;
+								}
 							}
 						}else {
 							System.out.println("Error occured when trying to load the mapping seed");
