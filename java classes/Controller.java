@@ -30,7 +30,7 @@ public class Controller {
 		return gameMapping;
 	}
 	
-	public int[] getPlayerMapping(){
+	public int[] getPlayerMapping() {
 		return currentGame.getPlayerMapping();
 	}
 	
@@ -38,6 +38,10 @@ public class Controller {
 		int [] letterFrequency;
 		letterFrequency = currentGame.getLetterFrequency();
 		return letterFrequency;
+	}
+	
+	public String[] getLeaderboard() {
+		return playerList.getLeaderboard();
 	}
 	
 	public void inputLetter(int letter,char guess) {
