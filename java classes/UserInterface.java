@@ -29,7 +29,7 @@ public class UserInterface {
 	}
 	private void newGame(){
 		
-		//displayLeaderboard();
+		
 		
 		int gameState = GAME_RUNNING;
 		int userOption;
@@ -68,11 +68,35 @@ public class UserInterface {
 	}
 
 	
-	private void diplayHomeMenu()
-	{
-		System.out.println("Welcome to Fun with Cryptograms");
+	private void displayMenu(){
 		System.out.println("Please choose one of the following options");
-		System.out.println("1. ")
+		System.out.println("1. Load Game");
+		System.out.println("2. New Game");
+		System.out.println("3. Show your stats");
+		System.out.println("4. Show leaderboard");
+		
+		int option = getOption(4);
+		
+		if(option==1) {
+			if(controller.loadGame()) {
+				loadGame();
+			}
+			else {
+				System.out.println("No game to load returning to menu");
+				displayMenu();
+			}
+		}
+		else if(option==2) {
+			newGame();
+		}
+		else if(option==3){
+			showStats();
+		}
+		else {
+			showLeaderboard();
+		}
+			
+
 		
 	}
 
@@ -142,10 +166,11 @@ public class UserInterface {
 			System.out.println(leaderboard[i]);
 		}
 		
+		
+		
 	}
 	
-	private void showStats()
-	{
+	private void showStats(){
 		
 	}
 	
@@ -380,6 +405,6 @@ public class UserInterface {
 		UserInterface ui = new UserInterface();
 		ui.login();
 		//Main menu loop
-		ui.newGame();
+		ui.displayMenu();
 	}	
 }
