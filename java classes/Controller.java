@@ -56,6 +56,7 @@ public class Controller {
 	
 	public boolean checkWin() {
 		return currentGame.checkWin();
+
 	}
 	
 	public boolean checkAlreadyMapped(char guess) {
@@ -65,4 +66,14 @@ public class Controller {
 	public boolean checkValueAlreadyMapped(int value) {
 		return currentGame.checkValueAlreadyMapped(value);
 	}
+	
+	public void exit() {
+		//currentGame.saveGame();
+		playerList.saveList();
+	}
+	
+	void playerFinishedGame(boolean gameState) {
+		player.finishedGame(gameState);
+	}
+
 }

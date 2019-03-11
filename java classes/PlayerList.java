@@ -102,7 +102,7 @@ public class PlayerList {
             int gamesPlayed = Integer.parseInt(tokens[2]);
             int totalGuesses = Integer.parseInt(tokens[3]);
             int correctGuesses = Integer.parseInt(tokens[4]);
-            float winLossRatio = Float.parseFloat(tokens[5]);
+            double winLossRatio = Double.parseDouble(tokens[5]);
             Player player = new Player(name, completedGames,gamesPlayed,totalGuesses,correctGuesses,winLossRatio);
             players.add(player);
         }
