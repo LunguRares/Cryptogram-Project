@@ -43,15 +43,23 @@ public class UserInterface {
 					undoLetter();
 					gameState = GAME_RUNNING;
 					break;
+				case 4:
+					this.exit();
 				default: 
 					System.out.println("Invalid user option");
 			}
-		}	
+		}
+		printNewGameOptions();
+		userOption = this.getOption(2);
+		if (userOption == 1) {
+			this.newGame();
+		} else exit();
 	}
 	
 	private int checkWin() {
 		if(controller.checkCompletion()){
 			if(controller.checkWin()){
+				controller.playerFinishedGame(true);
 				System.out.println("Well done you have successfully completed the cryptogram");
 				return GAME_COMPLETED_WIN;
 			}else {
@@ -83,7 +91,7 @@ public class UserInterface {
 		
 		try{
 			String input = scanner.next();
-			Scanner inputReader = new Scanner(input);
+			Scanner inputReader = new Scanner(input);		
 			if(inputReader.hasNextInt()) {
 				int option = inputReader.nextInt();
 				if(option>=1 &&  option<=NoOptions) {
@@ -108,7 +116,7 @@ public class UserInterface {
 
 	private int getPlayingUserOption() {
 		printPlayingOptions();
-		return getOption(2);
+		return getOption(4);
 
 	}
 	
@@ -116,7 +124,13 @@ public class UserInterface {
 		System.out.println("Please select an option;");
 		System.out.println("1.Enter a letter");
 		System.out.println("2.Undo a letter");
+		System.out.println("4.Exit Game");
 		System.out.println();
+	}
+	private void printNewGameOptions() {
+		System.out.println("Would you like to play a new game?");
+		System.out.println("1. Yes");
+		System.out.println("2. No");
 	}
 
 	private void loadGame(){
@@ -137,7 +151,8 @@ public class UserInterface {
 	}
 	
 	private void showSolution(){
-		
+	controller.playerFinishedGame(false);
+
 	}
 	
 	private void enterLetter(){
@@ -284,7 +299,9 @@ public class UserInterface {
 	}
 	
 	private void exit(){
-		//System.exit(0);
+		controller.exit();
+		System.out.println("Statistics saved.");
+		System.exit(0);
 	}
 	
 	private void displayPlayingMenu(){	    
