@@ -11,7 +11,8 @@ public class UserInterface {
 	private final int GAME_RUNNING = 0;
 	private final int GAME_COMPLETED = 1;
 	private final int GAME_COMPLETED_WIN = 2;
-
+	
+	private String playerName;
 	boolean letterMapping = true;
 	Scanner scanner; 
 	
@@ -24,7 +25,7 @@ public class UserInterface {
 	private void login(){
 		System.out.println("Hi welcome to our cryptogram game, have fun!\nPlease enter your username or enter one if you don't already have one");
 		scanner = new Scanner(System.in);
-		String playerName = scanner.next();
+		playerName = scanner.next();
 		controller = new Controller(playerName);
 	}
 	private void newGame(){
@@ -69,7 +70,7 @@ public class UserInterface {
 
 	
 	private void displayMenu(){
-		System.out.println("Please choose one of the following options");
+		System.out.println("\nPlease choose one of the following options");
 		System.out.println("1. Load Game");
 		System.out.println("2. New Game");
 		System.out.println("3. Show your stats");
@@ -79,10 +80,9 @@ public class UserInterface {
 		
 		if(option==1) {
 			if(controller.loadGame()) {
-				loadGame();
+				controller.loadGame();
 			}
 			else {
-				System.out.println("No game to load returning to menu");
 				displayMenu();
 			}
 		}
@@ -90,14 +90,25 @@ public class UserInterface {
 			newGame();
 		}
 		else if(option==3){
-			showStats();
+			getStats();
+			backToMenu();
 		}
 		else {
 			showLeaderboard();
+			backToMenu();
+				
 		}
-			
+	}
 
+	private void getStats() {
+		Player player = controller.getPlayer(playerName);
 		
+		System.out.println("Stats for " + player.getName());
+		System.out.println("Games completed: " + player.getCompletedGames());
+		System.out.println("Games played: " + player.getGamesPlayed());
+		System.out.println("Total Guesses: " + player.getTotalGuesses());
+		System.out.println("Correct Guesses: " + player.getCorrectGuesses());
+		System.out.println("Ratio: " + player.getRatio());
 	}
 
 	private void getMappingType() {
@@ -111,7 +122,6 @@ public class UserInterface {
 			letterMapping = true;
 		}else
 			letterMapping = false;
-
 	}
 
 	private int getOption(int NoOptions) {
@@ -137,8 +147,6 @@ public class UserInterface {
 			System.out.println("Invalid input please try again");
 			return getOption(NoOptions);
 		}
-	
-		
 	}
 
 	private int getPlayingUserOption() {
@@ -165,15 +173,8 @@ public class UserInterface {
 		{
 			System.out.println(leaderboard[i]);
 		}
-		
-		
-		
 	}
-	
-	private void showStats(){
-		
-	}
-	
+
 	private void hint(){
 		
 	}
@@ -227,8 +228,6 @@ public class UserInterface {
 			System.out.println("Invalid guess");
 			return;
 		}
-		
-		
 	}
 
 	private boolean valueIsAlreadyMapped(String input) {
@@ -398,6 +397,13 @@ public class UserInterface {
 		}
 	}
 	
+	private void backToMenu() {
+		System.out.println("\n1.Exit back to main menu");
+		int exitChoice = getOption(1);
+			if (exitChoice == 1) {
+				displayMenu();
+			}
+	}
 
 	
 	public static void main(String[] args) 
