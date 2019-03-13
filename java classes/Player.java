@@ -53,7 +53,6 @@ public class Player implements Comparable<Player> {
     		winLossRatio = (double)completedGames/(double)gamesPlayed;
     		winLossRatio = Math.round(winLossRatio * 100.0) / 100.0;
     	}
-     System.out.println("your winloss is now " + winLossRatio);
     }
 
     public double getRatio(){

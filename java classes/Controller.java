@@ -13,6 +13,10 @@ public class Controller {
 		player = playerList.getPlayer(playerName);
 	}
 	
+	public Player getPlayer(String playerName) {
+		return playerList.getPlayer(playerName);
+	}
+	
 	public void newGame() {
 		currentGame.newGame();
 		player.startedNewGame();
@@ -76,8 +80,11 @@ public class Controller {
 		playerList.saveList();
 	}
 	
-	void playerFinishedGame(boolean gameState) {
+	public void playerFinishedGame(boolean gameState) {
 		player.finishedGame(gameState);
 	}
 
+	public boolean loadGame() {
+		return currentGame.loadGame();
+	}
 }
