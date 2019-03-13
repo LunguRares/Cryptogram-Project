@@ -165,9 +165,9 @@ public class UserInterface {
 	
 	private void printPlayingOptions() {
 		System.out.println("Please select an option;");
-		System.out.println("1.Enter a letter");
-		System.out.println("2.Undo a letter");
-		System.out.println("4.Exit Game");
+		System.out.println("1. Enter a letter");
+		System.out.println("2. Undo a letter");
+		System.out.println("4. Exit Game");
 		System.out.println();
 	}
 	private void printNewGameOptions() {
@@ -177,7 +177,7 @@ public class UserInterface {
 	}
 
 	private void loadGame(){
-		
+		controller.loadGame();
 	}
 	
 	private void showLeaderboard(){
@@ -416,7 +416,7 @@ public class UserInterface {
 	}
 	
 	private void backToMenu() {
-		System.out.println("\n1.Exit back to main menu");
+		System.out.println("\n1. Exit back to main menu");
 		int exitChoice = getOption(1);
 			if (exitChoice == 1) {
 				displayMenu();
