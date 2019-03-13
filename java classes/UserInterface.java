@@ -65,6 +65,7 @@ public class UserInterface {
 		if(controller.checkCompletion()){
 			if(controller.checkWin()){
 				controller.playerFinishedGame(true);
+				displayPlayingMenu();
 				System.out.println("Well done you have successfully completed the cryptogram");
 				return GAME_COMPLETED_WIN;
 			}else {
@@ -83,16 +84,12 @@ public class UserInterface {
 		System.out.println("2. New Game");
 		System.out.println("3. Show your stats");
 		System.out.println("4. Show leaderboard");
+		System.out.println("5. Exit Program");
 		
-		int option = getOption(4);
+		int option = getOption(5);
 		
 		if(option==1) {
-			if(controller.loadGame()) {
-				controller.loadGame();
-			}
-			else {
-				displayMenu();
-			}
+			loadGame();
 		}
 		else if(option==2) {
 			newGame();
@@ -101,10 +98,13 @@ public class UserInterface {
 			getStats();
 			backToMenu();
 		}
-		else {
+		else if(option == 4) {
 			showLeaderboard();
-			backToMenu();
-				
+			backToMenu();		
+		} else {
+			controller.exit();
+			System.out.println("Goodbye");
+			System.exit(0);
 		}
 	}
 
@@ -183,9 +183,10 @@ public class UserInterface {
 	private void showLeaderboard(){
 	String[] leaderboard = controller.getLeaderboard();
 		
-		for(int i =0; i < leaderboard.length; i++)
-		{
-			System.out.println(leaderboard[i]);
+		for(int i =0; i < leaderboard.length; i++){
+			if(!leaderboard[i].equals("")){
+				System.out.println((i+1)+". " + leaderboard[i]);
+			}
 		}
 	}
 
@@ -342,7 +343,7 @@ public class UserInterface {
 	private void exit(){
 		controller.exit();
 		System.out.println("Statistics saved.");
-		System.exit(0);
+		displayMenu();
 	}
 	
 	private void displayPlayingMenu(){	    
@@ -427,7 +428,6 @@ public class UserInterface {
 	{
 		UserInterface ui = new UserInterface();
 		ui.login();
-		//Main menu loop
 		ui.displayMenu();
 	}	
 }

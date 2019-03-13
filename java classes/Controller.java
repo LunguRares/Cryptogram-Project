@@ -76,7 +76,7 @@ public class Controller {
 	}
 	
 	public void exit() {
-		//currentGame.saveGame();
+		currentGame.saveGame();
 		playerList.saveList();
 	}
 	

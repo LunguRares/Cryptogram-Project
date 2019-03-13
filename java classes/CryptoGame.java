@@ -138,7 +138,6 @@ public class CryptoGame {
 		boolean savedGameExists = false;
 		boolean validPlayerMappings = true;
 		
-		
 		try {
 			gameStatsFile = new File(GAME_STATS_FILE);
 			fileReader = new BufferedReader(new FileReader(gameStatsFile));

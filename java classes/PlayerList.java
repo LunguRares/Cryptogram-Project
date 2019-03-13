@@ -34,8 +34,12 @@ public class PlayerList {
             element = null;
         }
 
-        for (int i = 0;i<10;i++){
-            leaderBoard[i] = players.get(players.size()-i-1).getName();
+        for (int i = 0;i<leaderBoard.length;i++){
+        	if(i>=(players.size())){
+        		leaderBoard[i]= "";
+        	} else{
+        		leaderBoard[i] = players.get(players.size()-i-1).getName();
+        	}
         }
         return leaderBoard;
     }
