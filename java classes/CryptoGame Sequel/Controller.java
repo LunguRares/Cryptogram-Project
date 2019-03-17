@@ -25,8 +25,12 @@ public class Controller {
 		player.startedNewGame();
 	}
 	
-	public String[] getLeaderboard() {
-		return playerList.getLeaderboard();
+    public String[] getLeaderboardNames() {
+		return playerList.getLeaderboardNames();
+	}
+	
+	public double[] getLeaderboardScores() {
+		return playerList.getLeaderboardScores();
 	}
 
 	/*
