@@ -35,9 +35,10 @@ public class PlayerList {
         }
 
         for (int i = 0;i<10;i++){
-        	if(i>= players.size()) {
+        	if(players.size()>i) {
+        	    leaderboard[i] = players.get(i).getName();
         		leaderboard[i]="";
-        	}else{leaderboard[i] = players.get(i).getName();
+        	}else{leaderboard[i]="";
         	}
         }
         return leaderboard;
