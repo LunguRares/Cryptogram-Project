@@ -29,15 +29,15 @@ public class PlayerList {
      */
     public String[] getLeaderboard(){
         Collections.sort(players);
-        String[] leaderBoard = new String[10];
-        for (String element: leaderBoard) {
+        String[] leaderboard = new String[10];
+        for (String element: leaderboard) {
             element = null;
         }
 
         for (int i = 0;i<10;i++){
-            leaderBoard[i] = players.get(i).getName();
+            leaderboard[i] = players.get(i).getName();
         }
-        return leaderBoard;
+        return leaderboard;
     }
     
     /**
