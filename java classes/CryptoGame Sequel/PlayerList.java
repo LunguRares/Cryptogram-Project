@@ -39,6 +39,27 @@ public class PlayerList {
         }
         return leaderBoard;
     }
+    
+    /**
+     * This method retruns the scores of the top 10 players of the game
+     * @return An array of the scores of the top 10 players, from the top down
+     * If the palyer doesnt exist then the score provided will be 0
+     */ 
+    public double[] getLeaderboardScores(){
+        Collections.sort(players);
+        double[] leaderboardScores = new double[10];
+        for (double element: leaderboardScores) {
+            element = 0.0;
+        }
+        for (int i = 0;i<10;i++){
+        	if(players.size()>i) {
+            leaderboardScores[i] = players.get(players.size()-i-1).getRatio();
+        	} else {
+        		leaderboardScores[i] = 0.0;
+        	}
+        }
+        return leaderboardScores;
+    }
     /**
      * Takes in the player name and returns the player object.
      * @param playerName - The name of the player to be searched
