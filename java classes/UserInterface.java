@@ -213,11 +213,22 @@ public class UserInterface {
 	 *  Displays leaderboard with up to top 10 players
 	 */
 	private void showLeaderboard() {
+	int RANK_ONE = 0;
 	String[] leaderboardNames = controller.getLeaderboardNames();	
 	double[] leaderboardScores = controller.getLeaderboardScores();
+	if(leaderboardScores[RANK_ONE]==0) {
+		System.out.println("Currently there are no scores to display");
+		System.out.println("For a score to be displayed a game must be won");
+		mainMenu();
+	} else {
 	System.out.printf("Rank\tName\tScore\n");
 		for(int i =0; i < leaderboardNames.length; i++){
+			if(!(leaderboardScores[i]==0)) {
 				System.out.printf((i+1)+"."  + "\t" + leaderboardNames[i] + "\t" + leaderboardScores[i] + "\n");
+			} else {
+				System.out.printf((i+1)+"."  + "\n");
+			}
+			}
 		}
 	}
 
