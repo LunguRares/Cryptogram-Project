@@ -209,12 +209,15 @@ public class UserInterface {
 			playCryptogram();
 	}
 	
-	private void showLeaderboard(){
-	String[] leaderboard = controller.getLeaderboard();	
-		for(int i =0; i < leaderboard.length; i++){
-			if(!leaderboard[i].equals("")){
-				System.out.println((i+1)+". " + leaderboard[i]);
-			}
+    /*
+	 *  Displays leaderboard with up to top 10 players
+	 */
+	private void showLeaderboard() {
+	String[] leaderboardNames = controller.getLeaderboardNames();	
+	double[] leaderboardScores = controller.getLeaderboardScores();
+	System.out.printf("Rank\tName\tScore\n");
+		for(int i =0; i < leaderboardNames.length; i++){
+				System.out.printf((i+1)+"."  + "\t" + leaderboardNames[i] + "\t" + leaderboardScores[i] + "\n");
 		}
 	}
 
