@@ -310,6 +310,7 @@ public class CryptoGame {
 			System.out.println("Loading error occured due to a corrupted player mapping.");
 			return LOADING_FAILED;
 		}
+		letterFrequency = new int[26];
 		this.setLetterFrequency();
 		scanner.close();
 		System.out.println("Game has successfully been loaded. Good luck!");
