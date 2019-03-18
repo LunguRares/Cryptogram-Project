@@ -499,6 +499,22 @@ public class CryptoGame {
 		
 	}
 
+        /*
+         *Provides the player with a hint for one of their mappings
+         */
+        public void giveHint() {
+		Random rand = new Random();
+		int hint = rand.nextInt(25); 
+			if(playerMapping[hint]== NOT_MAPPED) {
+				playerMapping[hint] = hint;
+				return;
+			} else if(!(playerMapping[hint]==hint)) {
+				System.out.println("You're mapping of letter " + ((char)(playerMapping[hint]+ASCII_a)) + " was incorrect and has been changed to the correct " +  (char)(hint + ASCII_a));
+				playerMapping[hint] = hint;
+				}else {
+				giveHint();
+			}	
+	}
 
 	/*
 	 * 	Checks that all the letters in the phrase have been mapped
