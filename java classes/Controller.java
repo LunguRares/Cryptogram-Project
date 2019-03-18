@@ -125,6 +125,12 @@ public class Controller {
 		player.playerGuess(correctGuess);
 	}
 
+    /*
+     *  Gives the user a hint for one of their mappings
+     */
+    public void displayHint() {
+	currentGame.giveHint();
+	}
 	
 	/*
 	 * 	Checks that the letter that the player wants to undo has actually been mapped to something
