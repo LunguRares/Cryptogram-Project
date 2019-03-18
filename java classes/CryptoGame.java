@@ -589,6 +589,7 @@ public class CryptoGame {
 			for(int i=0;i<gameDataToSave.size();i++)
 				fileWriter.write(gameDataToSave.get(i)+"\n");		//write each piece of data on one line each
 			fileWriter.close();
+			System.out.println("The game was successfully saved.");
 		}
 		catch(Exception e) {
 			System.out.println("Error occured when trying to save the game data");
