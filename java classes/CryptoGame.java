@@ -616,7 +616,7 @@ public class CryptoGame {
 			gameDataFile = new File(GAMES_DATA_FILE);		//open the game data file
 			fileReader = new BufferedReader(new FileReader(gameDataFile));		//create a buffered reader to read from the game data file
 			String gameData = fileReader.readLine();
-			while(gameData!=null) {			//read through the game data file and check if there is any line shat starts with the player name 
+			while(gameData!=null) {			//read through the game data file and check if there is any line that starts with the player name 
 				if(gameData.indexOf(playerName+",")==0) {
 					playerHasGameSaved = true;
 					break;
