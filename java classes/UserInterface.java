@@ -232,14 +232,22 @@ public class UserInterface {
 		}
 	}
 
+
+    /*
+     *  Gives the user a hint for one of their mappings
+     */
 	private void hint(){
+	    controller.displayHint();
+		if(checkWin()==2) {
+			mainMenu();
+		}
 		
 	}
 	
 	private void showSolution(){
 	controller.playerFinishedGame(false);
-
 	}
+	
 	
 	/*
 	 * 	Allows the player to make a guess mapping
