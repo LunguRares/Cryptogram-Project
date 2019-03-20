@@ -27,22 +27,23 @@ public class PlayerList {
      * If the players don't exist, it will be filled with NULL's.
      * etc
      */
-    public String[] getLeaderboard(){
+        public String[] getLeaderboardNames(){
         Collections.sort(players);
-        String[] leaderboard = new String[10];
-        for (String element: leaderboard) {
+        String[] leaderboardNames = new String[10];
+        for (String element: leaderboardNames) {
             element = null;
         }
-
         for (int i = 0;i<10;i++){
         	if(players.size()>i) {
-        	    leaderboard[i] = players.get(i).getName();
-        		leaderboard[i]="";
-        	}else{leaderboard[i]="";
+            leaderboardNames[i] = players.get(players.size()-i-1).getName();
+        	} else {
+        		leaderboardNames[i] = "";
         	}
         }
-        return leaderboard;
+        return leaderboardNames;
     }
+
+        
     
     /**
      * This method retruns the scores of the top 10 players of the game
