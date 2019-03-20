@@ -28,6 +28,7 @@ public class CryptoGame {
 	private static final boolean INVALID_INPUT = false;
 	private static final String PHRASES_FILE = "phrases.txt";
 	private static final String GAMES_DATA_FILE = "gamesData.txt";
+	private static final int[] englishLetterFrequencies = {8,2,5,3,11,2,2,3,8,1,1,5,3,7,7,3,1,8,6,7,4,1,1,1,2,1};
 
 	public CryptoGame(String playerName) {
 		this.playerName = playerName;
@@ -36,6 +37,14 @@ public class CryptoGame {
 		playerMapping = new int[26];
 		letterFrequency = new int[26];
 		mappingSeed = 0;
+	}
+	public static void main (String args[]) {
+		System.out.println(englishLetterFrequencies.length);
+		int count = 0;
+		for(int i=0;i<englishLetterFrequencies.length;i++) {
+			count+=englishLetterFrequencies[i];
+		}
+		System.out.println(count);
 	}
 	
 	/*
@@ -118,6 +127,7 @@ public class CryptoGame {
 	 */
 	private void setLetterFrequency() {
 		int letter;
+		letterFrequency = new int[26];
 		for(int index=0;index<phrase.length();index++) {		//look at each letter in the sentence and add 1 to the letter frequency of that letter
 			letter = phrase.charAt(index);
 			if(letter>=ASCII_a && letter<=ASCII_z)
@@ -191,6 +201,7 @@ public class CryptoGame {
 				}
 			}
 		}
+		playerGuesses+= "  <---Player Guesses";
 		return playerGuesses;
 	}
 
@@ -214,6 +225,7 @@ public class CryptoGame {
 				}
 			}
 		}
+		gameMappings+= "  <---Cryptogram Mappings";
 		return gameMappings;
 	}
 	
@@ -232,6 +244,7 @@ public class CryptoGame {
 				else 
 					letterFrequencies = letterFrequencies + letterFrequency[letter-ASCII_a] + "  ";
 		}
+		letterFrequencies+= "  <---Sentence Letter Frequencies (no. of occurences)";
 		return letterFrequencies;
 	}
 	
@@ -310,7 +323,6 @@ public class CryptoGame {
 			System.out.println("Loading error occured due to a corrupted player mapping.");
 			return LOADING_FAILED;
 		}
-		letterFrequency = new int[26];
 		this.setLetterFrequency();
 		scanner.close();
 		System.out.println("Game has successfully been loaded. Good luck!");
@@ -502,7 +514,7 @@ public class CryptoGame {
         /*
          *Provides the player with a hint for one of their mappings
          */
-        public void giveHint() {
+    public void getHint() {
 		Random rand = new Random();
 		int hint = rand.nextInt(25); 
 			if(playerMapping[hint]== NOT_MAPPED) {
@@ -512,7 +524,7 @@ public class CryptoGame {
 				System.out.println("You're mapping of letter " + ((char)(playerMapping[hint]+ASCII_a)) + " was incorrect and has been changed to the correct " +  (char)(hint + ASCII_a));
 				playerMapping[hint] = hint;
 				}else {
-				giveHint();
+				getHint();
 			}	
 	}
 
@@ -545,9 +557,9 @@ public class CryptoGame {
 	/*
 	 * 	Delete a mapping of the player
 	 */
-	public void undoLetter(char UndoLetter) {
+	public void undoLetter(char undoLetter) {
 		for(int index=0;index<playerMapping.length;index++) {
-			if(playerMapping[index] == UndoLetter-ASCII_a) {	//search for the player mapping that has the undo letter as its value 
+			if(playerMapping[index]==undoLetter-ASCII_a && letterFrequency[index]!=0) {	//search for the player mapping that has the undo letter as its value 
 				playerMapping[index] = NOT_MAPPED;
 			}
 		}
@@ -588,6 +600,7 @@ public class CryptoGame {
 					System.out.println("Error: The game data file is corrupted (player name not found)");
 					continue;
 				}
+				scanner.close();
 			}
 			gameDataToSave.add(gameData);		//add the line to the data to be saved
 		}
@@ -606,7 +619,6 @@ public class CryptoGame {
 			for(int i=0;i<gameDataToSave.size();i++)
 				fileWriter.write(gameDataToSave.get(i)+"\n");		//write each piece of data on one line each
 			fileWriter.close();
-			System.out.println("The game was successfully saved.");
 		}
 		catch(Exception e) {
 			System.out.println("Error occured when trying to save the game data");
@@ -704,6 +716,36 @@ public class CryptoGame {
 		for(int i=0;i<playerMapping.length;i++)
 			gameData = gameData + playerMapping[i] + ","; 	//save the player mappings
 		return gameData;
+	}
+	
+	/*
+	 * 	Completes the player mapping with the correct mappings
+	 */
+
+	public void setSolution() {
+		for(int i=0;i<playerMapping.length;i++) {
+			playerMapping[i] = i;
+		}
+	}
+
+	
+	/*
+	 * 	Returns the string to be displayed for the letter frequencies in the English language
+	 */
+	public String getEnglishLetterFrequencies() {
+		String letterFrequencies = "";
+		for(int i=0;i<phrase.length();i++){
+			char letter = phrase.charAt(i);	
+			if(letter == 32){		//if the letter is actually a 'space' character
+					letterFrequencies = letterFrequencies + "  ";
+			}else 
+				if(englishLetterFrequencies[letter-ASCII_a]>9)		//condition required for correctly indenting the characters on the console
+					letterFrequencies = letterFrequencies + englishLetterFrequencies[letter-ASCII_a] + " ";
+				else 
+					letterFrequencies = letterFrequencies + englishLetterFrequencies[letter-ASCII_a] + "  ";
+		}
+		letterFrequencies+= "  <---English Letter Frequencies(%)";
+		return letterFrequencies;
 	}
 
 }
