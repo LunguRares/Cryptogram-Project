@@ -116,7 +116,7 @@ public class PlayerList {
     private void populatePlayerList(ArrayList<String> playerLines){
     	for (String playerInformation: playerLines) {
             String[] tokens = playerInformation.split(",");
-            String name = tokens[0].toLowerCase();
+            String name = tokens[0];
             int  completedGames = Integer.parseInt(tokens[1]);
             int gamesPlayed = Integer.parseInt(tokens[2]);
             int totalGuesses = Integer.parseInt(tokens[3]);
