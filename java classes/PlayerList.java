@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -53,9 +52,6 @@ public class PlayerList {
     public double[] getLeaderboardScores(){
         Collections.sort(players);
         double[] leaderboardScores = new double[10];
-        for (double element: leaderboardScores) {
-            element = 0.0;
-        }
         for (int i = 0;i<10;i++){
         	if(players.size()>i) {
             leaderboardScores[i] = players.get(players.size()-i-1).getRatio();
