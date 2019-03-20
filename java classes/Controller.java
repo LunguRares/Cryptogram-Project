@@ -26,7 +26,7 @@ public class Controller {
 	}
 	
     public String[] getLeaderboardNames() {
-		return playerList.getLeaderboard();
+		return playerList.getLeaderboardNames();
 	}
 	
 	public double[] getLeaderboardScores() {
@@ -128,8 +128,8 @@ public class Controller {
     /*
      *  Gives the user a hint for one of their mappings
      */
-    public void displayHint() {
-	currentGame.giveHint();
+    public void getHint() {
+	currentGame.getHint();
 	}
 	
 	/*
@@ -165,5 +165,20 @@ public class Controller {
 	 */
 	public void overwriteSavedGame() {
 		currentGame.overwriteSavedGame();
+	}
+	
+	/*
+	 * Shows the solution
+	 */
+
+	public void setSolution() {
+		currentGame.setSolution();
+	}
+	
+	/*
+	 * 	Returns the string to be displayed for the letter frequencies in the English language
+	 */
+	public String getEnglishLetterFrequencies() {
+		return currentGame.getEnglishLetterFrequencies();
 	}
 }
