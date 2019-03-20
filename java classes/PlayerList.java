@@ -29,9 +29,6 @@ public class PlayerList {
         public String[] getLeaderboardNames(){
         Collections.sort(players);
         String[] leaderboardNames = new String[10];
-        for (String element: leaderboardNames) {
-            element = null;
-        }
         for (int i = 0;i<10;i++){
         	if(players.size()>i) {
             leaderboardNames[i] = players.get(players.size()-i-1).getName();
