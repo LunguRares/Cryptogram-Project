@@ -25,9 +25,19 @@ public class UserInterface {
 	 * 	Takes the player name provided by the player and either loads their player saved data or creates a new Player profile
 	 */
 	private void login(){
+		int logInState = LOGIN_INCOMPLETE;
 		System.out.println("Hi welcome to our cryptogram game, have fun!\nPlease enter your username or enter one if you don't already have one");
-		playerName = scanner.next();
-		controller = new Controller(playerName); //this requires testing (player name can't contain ',' due to formatting of the data files)
+		while(!(logInState==LOGIN_COMPLETE)) {
+			playerName = scanner.next();
+			if(playerName.length()<15&&!playerName.contains(",")) {
+				controller = new Controller(playerName);
+				logInState = LOGIN_COMPLETE;
+			} else {
+				System.out.println("Sorry a username must be no more than 15 characters and cannot have a ',' in it. Please try again.");
+			}
+		}
+		
+		 //this requires testing (player name can't contain ',' due to formatting of the data files)
 	}
 	
 	/*
@@ -234,10 +244,15 @@ public class UserInterface {
 		System.out.println("Currently there are no scores to display");
 		System.out.println("For a score to be displayed a game must be won");
 	} else {
-	System.out.printf("Rank\tName\t\t\tScore\n");
+	System.out.printf("Rank\tName\t\tScore\n");
 		for(int i =0; i < leaderboardNames.length; i++){
 			if(!(leaderboardScores[i]==0.0)) {
+				if(leaderboardNames[i].length()>8) {
 				System.out.println((i+1)+"."  + "\t" + leaderboardNames[i] + "\t" +leaderboardScores[i]*100 + "%");
+				} else {
+					System.out.println((i+1)+"."  + "\t" + leaderboardNames[i] + "\t\t" +leaderboardScores[i]*100 + "%");
+				}
+	
 			} else {
 				System.out.println((i+1)+".");
 			}
