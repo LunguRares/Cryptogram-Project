@@ -26,7 +26,7 @@ public class Controller {
 	}
 	
     public String[] getLeaderboardNames() {
-		return playerList.getLeaderboard();
+		return playerList.getLeaderboardNames();
 	}
 	
 	public double[] getLeaderboardScores() {
@@ -125,6 +125,12 @@ public class Controller {
 		player.playerGuess(correctGuess);
 	}
 
+    /*
+     *  Gives the user a hint for one of their mappings
+     */
+    public void getHint() {
+	currentGame.getHint();
+	}
 	
 	/*
 	 * 	Checks that the letter that the player wants to undo has actually been mapped to something
@@ -159,5 +165,20 @@ public class Controller {
 	 */
 	public void overwriteSavedGame() {
 		currentGame.overwriteSavedGame();
+	}
+	
+	/*
+	 * Shows the solution
+	 */
+
+	public void setSolution() {
+		currentGame.setSolution();
+	}
+	
+	/*
+	 * 	Returns the string to be displayed for the letter frequencies in the English language
+	 */
+	public String getEnglishLetterFrequencies() {
+		return currentGame.getEnglishLetterFrequencies();
 	}
 }

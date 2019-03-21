@@ -6,7 +6,10 @@ public class UserInterface {
 	final int NOT_MAPPED = -1;
 	private final int ASCII_a = 97;
 	private final int ASCII_z = 122;
+	private static final int PROGRAM_RUNNING = 1;
+	private static final int PROGRAM_EXIT = 0;
 	private final int GAME_RUNNING = 0;
+	private final int GAME_COMPLETED_LOST = 1;
 	private final int GAME_COMPLETED_WIN = 2;
 	
 	private String playerName;
@@ -22,29 +25,39 @@ public class UserInterface {
 	 * 	Takes the player name provided by the player and either loads their player saved data or creates a new Player profile
 	 */
 	private void login(){
+		int logInState = LOGIN_INCOMPLETE;
 		System.out.println("Hi welcome to our cryptogram game, have fun!\nPlease enter your username or enter one if you don't already have one");
-		playerName = scanner.next();
-		controller = new Controller(playerName); //this requires testing (player name can't contain ',' due to formatting of the data files)
+		while(!(logInState==LOGIN_COMPLETE)) {
+			playerName = scanner.next();
+			if(playerName.length()<15&&!playerName.contains(",")) {
+				controller = new Controller(playerName);
+				logInState = LOGIN_COMPLETE;
+			} else {
+				System.out.println("Sorry a username must be no more than 15 characters and cannot have a ',' in it. Please try again.");
+			}
+		}
+		
+		 //this requires testing (player name can't contain ',' due to formatting of the data files)
 	}
 	
 	/*
 	 * 	Does all the preparations for a new game and then allows the player to play the new cryptogram
 	 */
-	private void newGame(){
+	private int newGame(){
 		controller.newGame(getMappingType());
-		playCryptogram();
+		return playCryptogram();
 	}
 	
 	/*
 	 * 	Allows the player to solve a cryptogram
 	 */
-	private void playCryptogram() {
+	private int playCryptogram() {
 		int gameState = GAME_RUNNING;
 		int userOption;
 		while(gameState==GAME_RUNNING) {	//while the game has not yet been completed or the user didn't chose to exit the cryptogram
 			displayGameState();
 			printPlayingOptions();
-			userOption = getOption(4);
+			userOption = getOption(6);
 			switch (userOption){
 				case 1:	enterLetter();		//enter a mapping
 						gameState = checkWin();	//check if the game is over
@@ -56,12 +69,20 @@ public class UserInterface {
 				case 3: saveGame();		//save the current state of the game
 						break;
 						
-				case 4:	this.mainMenu();	//return back to the main menu
+				case 4: getHint();		//gives the player a single hint 
+						gameState = checkWin();	//check if the game is over
 						break;
+						
+				case 5: showSolution();		//shows the correct phrase
+						gameState = GAME_COMPLETED_LOST;
+						break;
+						
+				case 6:	return PROGRAM_RUNNING;
 				
 				default:System.out.println("Invalid user option");
 			}
-		} 
+		}
+		return PROGRAM_RUNNING;
 	}
 	
 	/*
@@ -106,26 +127,26 @@ public class UserInterface {
 	/*
 	 * 	Displays the main menu options and 
 	 */
-	private void mainMenu(){
+	private int mainMenu(){
 		displayMainMenu();
 		int option = getOption(5);
 		switch(option) {
-			case 1:	loadGame();		//try to load a saved game
-					mainMenu();		//return back to the main menu after the game is over
+			case 1:	return loadGame();		//try to load a saved game
 					
-			case 2:	newGame();		//begin a new game
-					mainMenu();		//return back to the main menu after the game is over
+			case 2:	return newGame();		//begin a new game
 					
 			case 3:	getStats();		//display the stats of the player
-					backToMainMenu();	//return back to the main menu 
+					return backToMainMenu();	//return back to the main menu 
 					
 			case 4:	showLeaderboard();	//display the leaderboard
-					backToMainMenu();	//return back to the main menu
+					return backToMainMenu();	//return back to the main menu
 					
-			case 5: controller.exit();	//take care of all the necessary cleaning required before closing the game
-					System.out.println("Goodbye");
-					System.exit(0);
+			case 5: return PROGRAM_EXIT;
+			
+			default: System.out.println("Invalid option");
 		}
+		System.out.println("Something went horribly wrong.");
+		return PROGRAM_EXIT;
 	}
 	
 	/*
@@ -197,37 +218,63 @@ public class UserInterface {
 		System.out.println("1. Enter a letter");
 		System.out.println("2. Undo a letter");
 		System.out.println("3. Save Game");
-		System.out.println("4. Exit to Main Menu");
+		System.out.println("4. Get Hint");
+		System.out.println("5. Show solution");
+		System.out.println("6. Exit to Main Menu");
 		System.out.println();
 	}
 
 	/*
 	 * 	Try to load a saved game. If a saved game exists then play it, if not, do nothing
 	 */
-	private void loadGame(){
+	private int loadGame(){
 		if(controller.loadGame())	//if loadGame() returns true then it means that a saved game was successfully loaded
-			playCryptogram();
+			return playCryptogram();
+		return PROGRAM_RUNNING;
 	}
 	
     /*
 	 *  Displays leaderboard with up to top 10 players
 	 */
 	private void showLeaderboard() {
+	int rankOne = 0;
 	String[] leaderboardNames = controller.getLeaderboardNames();	
 	double[] leaderboardScores = controller.getLeaderboardScores();
-	System.out.printf("Rank\tName\tScore\n");
+	if(leaderboardScores[rankOne]==0) {
+		System.out.println("Currently there are no scores to display");
+		System.out.println("For a score to be displayed a game must be won");
+	} else {
+	System.out.printf("Rank\tName\t\tScore\n");
 		for(int i =0; i < leaderboardNames.length; i++){
-				System.out.printf((i+1)+"."  + "\t" + leaderboardNames[i] + "\t" + leaderboardScores[i] + "\n");
+			if(!(leaderboardScores[i]==0.0)) {
+				if(leaderboardNames[i].length()>8) {
+				System.out.println((i+1)+"."  + "\t" + leaderboardNames[i] + "\t" +leaderboardScores[i]*100 + "%");
+				} else {
+					System.out.println((i+1)+"."  + "\t" + leaderboardNames[i] + "\t\t" +leaderboardScores[i]*100 + "%");
+				}
+	
+			} else {
+				System.out.println((i+1)+".");
+			}
+			}
 		}
 	}
 
-	private void hint(){
-		
+    /*
+     *  Gives the user a hint for one of their mappings
+     */
+	private void getHint(){
+	    controller.getHint();
 	}
 	
+	/*
+	 * 	Shows the solution for the cryptogram
+	 */
 	private void showSolution(){
-	controller.playerFinishedGame(false);
-
+		controller.playerFinishedGame(false);
+		controller.setSolution();
+		controller.deleteSavedFinishedGame();
+		displayGameState();
 	}
 	
 	/*
@@ -305,24 +352,36 @@ public class UserInterface {
 		System.out.println(controller.getPlayerGuesses());	//prints out the sentence with the user mappings replaced
 		System.out.println(controller.getGameMappings());	//prints out the game mappings
 		System.out.println(controller.getLetterFrequencies());	//prints out the letter frequencies 
+		System.out.println(controller.getEnglishLetterFrequencies());	//prints out the letter frequencies for English language
 		System.out.println();
 	}
 	
 	/*
 	 * 	Returns the player back to the main menu
 	 */
-	private void backToMainMenu() {
+	private int backToMainMenu() {
 		System.out.println("\n1. Exit back to main menu");
-		int exitChoice = getOption(1);
-			if (exitChoice == 1) {
-				mainMenu();
-			}
+		getOption(1);
+		return PROGRAM_RUNNING;
 	}
 
+	/*
+	 * 	Take care of all the necessary cleaning required before closing the game
+	 */
+	private void exit() {
+		this.controller.exit();
+	}
+	
 	public static void main(String[] args) 
 	{
 		UserInterface ui = new UserInterface();
+		int programStatus;
 		ui.login();
-		ui.mainMenu();
+		do {
+			programStatus = ui.mainMenu();
+		}while(programStatus==PROGRAM_RUNNING);
+		ui.exit();	
+		System.out.println("Goodbye");
+		System.exit(0);
 	}	
 }

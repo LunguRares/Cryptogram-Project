@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -27,21 +26,20 @@ public class PlayerList {
      * If the players don't exist, it will be filled with NULL's.
      * etc
      */
-    public String[] getLeaderboard(){
+        public String[] getLeaderboardNames(){
         Collections.sort(players);
-        String[] leaderboard = new String[10];
-        for (String element: leaderboard) {
-            element = null;
-        }
-
+        String[] leaderboardNames = new String[10];
         for (int i = 0;i<10;i++){
-        	if(i>= players.size()) {
-        		leaderboard[i]="";
-        	}else{leaderboard[i] = players.get(i).getName();
+        	if(players.size()>i) {
+            leaderboardNames[i] = players.get(players.size()-i-1).getName();
+        	} else {
+        		leaderboardNames[i] = "";
         	}
         }
-        return leaderboard;
+        return leaderboardNames;
     }
+
+        
     
     /**
      * This method retruns the scores of the top 10 players of the game
@@ -51,9 +49,6 @@ public class PlayerList {
     public double[] getLeaderboardScores(){
         Collections.sort(players);
         double[] leaderboardScores = new double[10];
-        for (double element: leaderboardScores) {
-            element = 0.0;
-        }
         for (int i = 0;i<10;i++){
         	if(players.size()>i) {
             leaderboardScores[i] = players.get(players.size()-i-1).getRatio();
@@ -121,7 +116,7 @@ public class PlayerList {
     private void populatePlayerList(ArrayList<String> playerLines){
     	for (String playerInformation: playerLines) {
             String[] tokens = playerInformation.split(",");
-            String name = tokens[0].toLowerCase();
+            String name = tokens[0];
             int  completedGames = Integer.parseInt(tokens[1]);
             int gamesPlayed = Integer.parseInt(tokens[2]);
             int totalGuesses = Integer.parseInt(tokens[3]);
