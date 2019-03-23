@@ -218,7 +218,7 @@ public class CryptoGame {
 	 */
 	public String getSeparatingLine() {
 		String separatingLine = "";
-		char sepparatingCharacter = '*';
+		char sepparatingCharacter = '=';
 		for(int i=0;i<phrase.length();i++) {
 			if(phrase.charAt(i)==' ')
 				separatingLine = separatingLine + sepparatingCharacter + sepparatingCharacter;
