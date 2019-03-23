@@ -75,6 +75,13 @@ public class Controller {
 	}
 
 	/*
+	 * 	Returns the separating line to be displayed between the player guesses and the game mappings 
+	 */
+	public String getSeparatingLine() {
+		return currentGame.getSeparatingLine();
+	}
+	
+	/*
 	 * 	Returns the string to be displayed for the game mappings
 	 */
 	public String getGameMappings() {
