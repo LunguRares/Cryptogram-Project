@@ -11,6 +11,8 @@ public class UserInterface {
 	private final int GAME_RUNNING = 0;
 	private final int GAME_COMPLETED_LOST = 1;
 	private final int GAME_COMPLETED_WIN = 2;
+	private final int LOGIN_INCOMPLETE = 0;
+	private final int LOGIN_COMPLETE = 1;
 	
 	private String playerName;
 	boolean letterMapping = true;
