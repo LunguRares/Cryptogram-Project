@@ -3,26 +3,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
+
 
 public class CryptoGame {
 	
@@ -221,7 +205,7 @@ public class CryptoGame {
 				if(playerMapping[letter-ASCII_a] == NOT_MAPPED)		//if the letter has not yet been mapped
 					playerGuesses = playerGuesses + "___  ";
 				else{
-					playerGuesses =  playerGuesses + (char)(playerMapping[letter-ASCII_a]+ASCII_a)+"    ";		//receive the value the player has mapped, add 97 to it to get a ASCII letter value and cast it to a character
+					playerGuesses =  playerGuesses + " " +(char)(playerMapping[letter-ASCII_a]+ASCII_a)+"   ";		//receive the value the player has mapped, add 97 to it to get a ASCII letter value and cast it to a character
 				}
 			}
 		}
@@ -230,10 +214,29 @@ public class CryptoGame {
 	}
 
 	/*
+	 * 	Creates and returns a separating line between the phrase and the game mapping
+	 */
+	public String getSeparatingLine() {
+		String separatingLine = "";
+		char sepparatingCharacter = '*';
+		for(int i=0;i<phrase.length();i++) {
+			if(phrase.charAt(i)==' ')
+				separatingLine = separatingLine + sepparatingCharacter + sepparatingCharacter;
+			else
+				separatingLine = separatingLine + sepparatingCharacter + sepparatingCharacter + sepparatingCharacter + sepparatingCharacter + sepparatingCharacter;
+		}
+		for(int i=0;i<37;i++)
+			separatingLine+=sepparatingCharacter;
+		return separatingLine;
+	}
+	
+	/*
 	 * 	Creates and returns the String to be displayed in the console for the game mapping
 	 */
 	public String getGameMappings() {
-		String gameMappings = " ";
+		String gameMappings = "";
+		if(letterMapping)
+			gameMappings = " ";
 		for(int i=0;i<phrase.length();i++){
 			char letter = phrase.charAt(i);	
 			if(letter == 32){		//if the letter is actually a 'space' character
@@ -245,10 +248,12 @@ public class CryptoGame {
 					if(gameMapping[letter-ASCII_a]>8) 		//condition required for correctly indenting the characters on the console
 						gameMappings = gameMappings + (gameMapping[letter-ASCII_a]+1) +"   ";		
 					else
-						gameMappings = gameMappings + (gameMapping[letter-ASCII_a]+1) + "  ";
+						gameMappings = gameMappings + " " + (gameMapping[letter-ASCII_a]+1) + "   ";
 				}
 			}
 		}
+		if(!letterMapping)
+			gameMappings+= " ";
 		gameMappings+= " <---Cryptogram Mappings";
 		return gameMappings;
 	}
@@ -263,8 +268,8 @@ public class CryptoGame {
 			if(letter == 32){		//if the letter is actually a 'space' character
 					letterFrequencies = letterFrequencies + "  ";
 			}else 
-				if(englishLetterFrequencies[letter-ASCII_a]>9)		//condition required for correctly indenting the characters on the console
-					letterFrequencies = letterFrequencies + englishLetterFrequencies[letter-ASCII_a] + " ";
+				if(englishLetterFrequencies[letter-ASCII_a]>9.9)		//condition required for correctly indenting the characters on the console
+					letterFrequencies = letterFrequencies + (int)englishLetterFrequencies[letter-ASCII_a] + "   ";
 				else 
 					letterFrequencies = letterFrequencies + englishLetterFrequencies[letter-ASCII_a] + "  ";
 		}
@@ -282,8 +287,8 @@ public class CryptoGame {
 			if(letter == 32){		//if the letter is actually a 'space' character
 					letterFrequencies = letterFrequencies + "  ";
 			}else 
-				if(letterFrequency[letter-ASCII_a]>9)		//condition required for correctly indenting the characters on the console
-					letterFrequencies = letterFrequencies + letterFrequency[letter-ASCII_a] + " ";
+				if(letterFrequency[letter-ASCII_a]>9.9)		//condition required for correctly indenting the characters on the console
+					letterFrequencies = letterFrequencies + (int)letterFrequency[letter-ASCII_a] + "   ";
 				else 
 					letterFrequencies = letterFrequencies + letterFrequency[letter-ASCII_a] + "  ";
 		}
@@ -760,18 +765,34 @@ public class CryptoGame {
 			gameData = gameData + playerMapping[i] + ","; 	//save the player mappings
 		return gameData;
 	}
-	
+		
 	/*
 	 * 	Completes the player mapping with the correct mappings
 	 */
-
 	public void setSolution() {
 		for(int i=0;i<playerMapping.length;i++) {
 			playerMapping[i] = i;
 		}
 	}
 
+	/*
+	 * 	FOR TESTING Returns the player mappings
+	*/
+	public int[] getPlayerMappingArray() {
+		return playerMapping;
+	}
 	
-
-
+	/*
+	 * 	FOR TESTING Returns the phrase
+	*/
+	public String getPhrase() {
+		return phrase;
+	}
+	
+	/*
+	 * 	FOR TESTING Returns the letter frequencies
+	*/
+	public double[] getLetterFrequencyArray() {
+		return letterFrequency;
+	}
 }
