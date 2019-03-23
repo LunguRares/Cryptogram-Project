@@ -352,6 +352,7 @@ public class UserInterface {
 	private void displayGameState(){	    
 		System.out.println();
 		System.out.println(controller.getPlayerGuesses());	//prints out the sentence with the user mappings replaced
+		System.out.println(controller.getSeparatingLine()); //prints a separating line 
 		System.out.println(controller.getGameMappings());	//prints out the game mappings
 		System.out.println(controller.getLetterFrequencies());	//prints out the letter frequencies 
 		System.out.println(controller.getEnglishLetterFrequencies());	//prints out the letter frequencies for English language
