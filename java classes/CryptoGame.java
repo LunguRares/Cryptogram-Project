@@ -3,6 +3,23 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
@@ -12,7 +29,7 @@ public class CryptoGame {
 	private String playerName;
 	private String phrase;
 	private int[] gameMapping;		//Index = Actual letter in alphabet (0-25) ;  Value at index = Letter that the index letter maps to (0-25)
-	private int[] letterFrequency;	
+	private double[] letterFrequency;	
 	private int[] playerMapping;	//Index = Actual letter in alphabet (0-25) ; Value at index = Letter that the user mapped to (0-25) ||OR|| '-1' if that letter hasn't been set yet ||OR|| value of index if letter doesn't appear in sentence
 	private int mappingSeed;
 	private boolean letterMapping;		//if TRUE then the mapping type is Letter and if FALSE the mapping type is Number
@@ -28,14 +45,14 @@ public class CryptoGame {
 	private static final boolean INVALID_INPUT = false;
 	private static final String PHRASES_FILE = "phrases.txt";
 	private static final String GAMES_DATA_FILE = "gamesData.txt";
-	private static final int[] englishLetterFrequencies = {8,2,5,3,11,2,2,3,8,1,1,5,3,7,7,3,1,8,6,7,4,1,1,1,2,1};
+	private static final double[] englishLetterFrequencies = {8.5,2.1,4.5,3.4,11.2,1.8,2.5,3.0,7.6,0.2,1.1,5.5,3.0,6.7,7.2,3.2,0.2,7.6,5.7,7.0,3.6,1.0,1.3,0.3,1.8,0.3};
 
 	public CryptoGame(String playerName) {
 		this.playerName = playerName;
 		phrase = "";
 		gameMapping = new int[26];
 		playerMapping = new int[26];
-		letterFrequency = new int[26];
+		letterFrequency = new double[26];
 		mappingSeed = 0;
 	}
 	public static void main (String args[]) {
@@ -127,11 +144,18 @@ public class CryptoGame {
 	 */
 	private void setLetterFrequency() {
 		int letter;
-		letterFrequency = new int[26];
+		int count = 0;
+		letterFrequency = new double[26];
 		for(int index=0;index<phrase.length();index++) {		//look at each letter in the sentence and add 1 to the letter frequency of that letter
 			letter = phrase.charAt(index);
-			if(letter>=ASCII_a && letter<=ASCII_z)
+			if(letter>=ASCII_a && letter<=ASCII_z) {
 			letterFrequency[letter-ASCII_a]++;
+			count++;
+			}
+		}
+		
+		for(int i = 0; i < letterFrequency.length;i++) {
+			letterFrequency[i]= (double)Math.round((letterFrequency[i]/count)*1000)/10;
 		}
 	}
 	
@@ -195,9 +219,9 @@ public class CryptoGame {
 					playerGuesses = playerGuesses + "  ";
 			}else {
 				if(playerMapping[letter-ASCII_a] == NOT_MAPPED)		//if the letter has not yet been mapped
-					playerGuesses = playerGuesses + "__ ";
+					playerGuesses = playerGuesses + "___  ";
 				else{
-					playerGuesses = playerGuesses + (char)(playerMapping[letter-ASCII_a]+ASCII_a)+"  ";		//receive the value the player has mapped, add 97 to it to get a ASCII letter value and cast it to a character
+					playerGuesses =  playerGuesses + (char)(playerMapping[letter-ASCII_a]+ASCII_a)+"    ";		//receive the value the player has mapped, add 97 to it to get a ASCII letter value and cast it to a character
 				}
 			}
 		}
@@ -209,24 +233,43 @@ public class CryptoGame {
 	 * 	Creates and returns the String to be displayed in the console for the game mapping
 	 */
 	public String getGameMappings() {
-		String gameMappings = "";
+		String gameMappings = " ";
 		for(int i=0;i<phrase.length();i++){
 			char letter = phrase.charAt(i);	
 			if(letter == 32){		//if the letter is actually a 'space' character
 					gameMappings = gameMappings + "  ";
 			}else {
 				if(letterMapping) 		//if the mapping is of letter type then letters must be displayed
-					gameMappings = gameMappings + (char)(gameMapping[letter-ASCII_a]+ASCII_a) + "  ";		//receive the value of the game mapping for that letter, add 97 to it to get a ASCII letter value and cast it to a character
+					gameMappings = gameMappings + (char)(gameMapping[letter-ASCII_a]+ASCII_a) + "    ";		//receive the value of the game mapping for that letter, add 97 to it to get a ASCII letter value and cast it to a character
 				else {
 					if(gameMapping[letter-ASCII_a]>8) 		//condition required for correctly indenting the characters on the console
-						gameMappings = gameMappings + (gameMapping[letter-ASCII_a]+1) +" ";		
+						gameMappings = gameMappings + (gameMapping[letter-ASCII_a]+1) +"   ";		
 					else
 						gameMappings = gameMappings + (gameMapping[letter-ASCII_a]+1) + "  ";
 				}
 			}
 		}
-		gameMappings+= "  <---Cryptogram Mappings";
+		gameMappings+= " <---Cryptogram Mappings";
 		return gameMappings;
+	}
+	
+	/*
+	 * 	Returns the string to be displayed for the letter frequencies in the English language
+	 */
+	public String getEnglishLetterFrequencies() {
+		String letterFrequencies = "";
+		for(int i=0;i<phrase.length();i++){
+			char letter = phrase.charAt(i);	
+			if(letter == 32){		//if the letter is actually a 'space' character
+					letterFrequencies = letterFrequencies + "  ";
+			}else 
+				if(englishLetterFrequencies[letter-ASCII_a]>9)		//condition required for correctly indenting the characters on the console
+					letterFrequencies = letterFrequencies + englishLetterFrequencies[letter-ASCII_a] + " ";
+				else 
+					letterFrequencies = letterFrequencies + englishLetterFrequencies[letter-ASCII_a] + "  ";
+		}
+		letterFrequencies+= "  <---English Letter Frequencies(%)";
+		return letterFrequencies;
 	}
 	
 	/*
@@ -244,7 +287,7 @@ public class CryptoGame {
 				else 
 					letterFrequencies = letterFrequencies + letterFrequency[letter-ASCII_a] + "  ";
 		}
-		letterFrequencies+= "  <---Sentence Letter Frequencies (no. of occurences)";
+		letterFrequencies+= "  <---Sentence Letter Frequencies (%)";
 		return letterFrequencies;
 	}
 	
@@ -729,23 +772,6 @@ public class CryptoGame {
 	}
 
 	
-	/*
-	 * 	Returns the string to be displayed for the letter frequencies in the English language
-	 */
-	public String getEnglishLetterFrequencies() {
-		String letterFrequencies = "";
-		for(int i=0;i<phrase.length();i++){
-			char letter = phrase.charAt(i);	
-			if(letter == 32){		//if the letter is actually a 'space' character
-					letterFrequencies = letterFrequencies + "  ";
-			}else 
-				if(englishLetterFrequencies[letter-ASCII_a]>9)		//condition required for correctly indenting the characters on the console
-					letterFrequencies = letterFrequencies + englishLetterFrequencies[letter-ASCII_a] + " ";
-				else 
-					letterFrequencies = letterFrequencies + englishLetterFrequencies[letter-ASCII_a] + "  ";
-		}
-		letterFrequencies+= "  <---English Letter Frequencies(%)";
-		return letterFrequencies;
-	}
+
 
 }
