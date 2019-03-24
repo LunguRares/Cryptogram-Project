@@ -1,13 +1,11 @@
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
+import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Random;
-
-import javax.management.monitor.GaugeMonitorMBean;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -16,236 +14,109 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class CryptoGameTest {
-
-	CryptoGame game;
-	private final String PHRASES_FILE = "phrases.txt";
-	private final int NOT_MAPPED = -1;
-	private final int ASCII_a = 97;
-
-
 	
+	CryptoGame currentGame;
+	@BeforeAll
+	static void setUpBeforeClass() throws Exception {
+	}
+
+	@AfterAll
+	static void tearDownAfterClass() throws Exception {
+	}
+
 	@BeforeEach
 	void setUp() throws Exception {
-		game = new CryptoGame("Tester");
-
+		currentGame = new CryptoGame("TestPlayer");
 	}
 
 	@AfterEach
 	void tearDown() throws Exception {
 	}
-	
+
 	@Test
-	void testGetPhrase() {
-		String phrase = game.getPhrase();
-		assertEquals(null, phrase);
-		game.newGame();
-		phrase = game.getPhrase();
-		assertNotEquals(null, phrase);
+	void testSaveAndLoad() {
+		currentGame.newGame(1);
+		this.deleteSavedGame();
+		assertEquals(false,currentGame.playerHasGameSaved());		//there should be no saved game so loadGame should return false
+		currentGame.saveGame();
+		currentGame.loadGame();
+		assertEquals(true, currentGame.playerHasGameSaved());			//there should be a saved game so loadGame should return true
+		currentGame.deleteSavedFinishedGame();
+		assertEquals(false, currentGame.playerHasGameSaved());		//there should be no saved game so loadGame should return false
 	}
 	
 	@Test
-	void testPhraseIsInFile() {
-		game.newGame();
-		
-		BufferedReader fileReader;
-		String phrase;
-		ArrayList<String> phrases = new ArrayList<>();
-		File phrasesFile;
-		
-		try {
-			phrasesFile = new File(PHRASES_FILE);
-			fileReader = new BufferedReader(new FileReader(phrasesFile));
-			 phrase = fileReader.readLine();
-			 while(phrase!=null) {
-				 phrases.add(phrase);
-				 phrase = fileReader.readLine();
-			 }
-			 fileReader.close();
+	void testHint() {
+		currentGame.newGame(1);
+		int previousNoCorrectMappings = getNoCorrectMappings();
+		currentGame.getHint();
+		int newNoCorrectMappings = getNoCorrectMappings();
+		assertEquals(previousNoCorrectMappings+1, newNoCorrectMappings);
+	}
+	
+	@Test
+	void testShowSolution() {
+		currentGame.newGame(1);
+		int noCorrectMappings = getNoCorrectMappings();
+		assertNotEquals(26, noCorrectMappings);
+		currentGame.setSolution();
+		noCorrectMappings = getNoCorrectMappings();
+		assertEquals(26, noCorrectMappings);
+	}
+	
+	@Test
+	void testFrequency() {
+		currentGame.newGame(1);
+		String phrase = currentGame.getPhrase();
+		double[] letterCount = new double[26];
+		int totalLetters = 0;
+		for(int i=0;i<phrase.length();i++) {
+			if(phrase.charAt(i)!=' ') {
+				letterCount[phrase.charAt(i)-97]++;
+				totalLetters++;
+			}
 		}
-		catch(IOException e) {
-			System.out.println("Error: The file "+PHRASES_FILE+" doesn't exist.");
+		double[] letterFrequencies = currentGame.getLetterFrequencyArray();
+		for(int i=0;i<26;i++) {
+			double letterFreq = (double)Math.round((letterCount[i]/totalLetters)*1000)/10;
+			assertEquals(letterFreq, letterFrequencies[i]);
+		}
+	}
+
+	private int getNoCorrectMappings() {
+		int noCorrectMappings = 0;
+		int[] playerMapping = currentGame.getPlayerMappingArray();
+		for(int i=0;i<playerMapping.length;i++) 
+			if(playerMapping[i]==i)
+				noCorrectMappings++;
+		return noCorrectMappings;
+	}
+	private void deleteSavedGame() {
+		File gamesDataFile;
+		BufferedReader fileReader;
+		BufferedWriter fileWriter;
+		String fileLine;
+		ArrayList<String> dataToSave = new ArrayList<>();
+		try {
+			gamesDataFile = new File("gamesData.txt");		
+			fileReader = new BufferedReader(new FileReader(gamesDataFile));		//open the game data file
+			fileLine = fileReader.readLine();		//get the first line 
+			while(fileLine!=null) {		//while there are still lines in the file read them and look for the player name
+				if(!fileLine.contains("TestPlayer")) {		//if the line contains the player name then don't save it
+					dataToSave.add(fileLine);
+				}
+				fileLine = fileReader.readLine(); 	//read another line
+			}
+			fileReader.close();
+			fileWriter = new BufferedWriter(new FileWriter(gamesDataFile));
+			for(String lineToSave: dataToSave)
+				fileWriter.write(lineToSave);
+			fileWriter.close();
+		}
+		catch(Exception e) {		//some error occurred when trying to open the data file
 			return;
 		}
 		
-		phrase = game.getPhrase();
-		assertTrue(phrases.contains(phrase));
-	}
-	
-	
-
-	@Test
-	void testValidGameMapping() {
-		game.newGame();
-		
-		int[] gameMapping = game.getGameMapping();
-		int[] letterAppearance = new int[26]; //by default Java fills the array with 0
-		boolean mappingToSameLetter = false;
-		
-		for(int i=0;i<gameMapping.length;i++) {
-			letterAppearance[gameMapping[i]]++; //this should increase the value of each element in letterAppearance
-			if(gameMapping[i]==i)
-				mappingToSameLetter = true;
-		}
-		
-		assertEquals(false, mappingToSameLetter);
-		
-		boolean mappingJustOnce = true;
-		
-		for(int i=0;i<letterAppearance.length;i++) {
-			if(letterAppearance[i]!=1) {
-				mappingJustOnce = false;
-				break;
-			}
-		}
-		
-		assertEquals(true, mappingJustOnce);
-	}
-
-	@Test
-	void testGetGameMapping() {
-		int[] gameMapping = game.getGameMapping();
-		boolean gameMappingIsEmpty = true;
-		
-		for(int i=0;i<gameMapping.length;i++) {
-			if(gameMapping[i]!=0)
-				gameMappingIsEmpty = false;
-		}
-		assertEquals(true, gameMappingIsEmpty);
-		
-		game.newGame();
-		gameMapping = game.getGameMapping();
-		
-		for(int i=0;i<gameMapping.length;i++) {
-			if(gameMapping[i]!=0)
-				gameMappingIsEmpty = false;
-		}
-		assertEquals(false, gameMappingIsEmpty);
-		
-	}
-	
-	@Test
-	void testGetPlayerMapping() {
-		int[] playerMapping = game.getPlayerMapping();
-		boolean playerMappingIsEmpty = true;
-		
-		for(int i=0;i<playerMapping.length;i++) {
-			if(playerMapping[i]!=0)
-				playerMappingIsEmpty = false;
-		}
-		assertEquals(true, playerMappingIsEmpty);
-		
-		playerMappingIsEmpty = true;
-		game.newGame();
-		playerMapping = game.getPlayerMapping();
-		
-		for(int i=0;i<playerMapping.length;i++) {
-			if(playerMapping[i]!=0)
-				playerMappingIsEmpty = false;
-		}
-		assertEquals(false, playerMappingIsEmpty);
-	}
-
-	@Test
-	void testLoadGame() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testNewGame() {
-		
-	}
-
-	@Test
-	void testInputLetterMapping() {
-		boolean letterNotSet;
-		game.newGame();
-		int[] playerMapping = game.getPlayerMapping();
-		for(int i=0;i<playerMapping.length;i++) {
-			letterNotSet = true;
-			if(!(playerMapping[i]==NOT_MAPPED || playerMapping[i]==i))
-				letterNotSet = false;
-			assertEquals(true, letterNotSet);
-		}
-		Random random = new Random();
-		int letter;
-		char guess;
-		
-		letter = random.nextInt(26)+ASCII_a;
-		guess = (char)(random.nextInt(26)+ASCII_a);
-		
-		game.inputLetter(letter, guess);
-		playerMapping = game.getPlayerMapping();
-		
-		int[] gameMapping = game.getGameMapping();
-		boolean letterGotMapped = false;
-		
-		for(int i=0;i<gameMapping.length;i++)
-			if(gameMapping[i] == letter-ASCII_a) {
-				if(playerMapping[i]==(guess-ASCII_a))
-					letterGotMapped = true;
-				break;
-			}
-		
-		assertEquals(true, letterGotMapped);
-
-	}
-	
-	@Test
-	void testInputNumberMapping() {
-		game.newGame();
-		int[] playerMapping;
-		Random random = new Random();
-		int letter;
-		char guess;
-		
-		letter = random.nextInt(26)+1;
-		guess = (char)(random.nextInt(26)+ASCII_a);
-		
-		game.inputLetter(letter, guess);
-		playerMapping = game.getPlayerMapping();
-		
-		int[] gameMapping = game.getGameMapping();
-		boolean letterGotMapped = false;
-		
-		for(int i=0;i<gameMapping.length;i++)
-			if(gameMapping[i] == letter-1) {
-				if(playerMapping[i]==(guess-ASCII_a))
-					letterGotMapped = true;
-				break;
-			}
-		
-		assertEquals(true, letterGotMapped);
-
-	}
-
-	@Test
-	void testCheckAlreadyMapped() {
-		game.newGame();
-	}
-
-	@Test
-	void testCheckValueAlreadyMapped() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testUndoLetter() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testGetLetterFrequency() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testCheckCompletion() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testCheckWin() {
-		fail("Not yet implemented");
 	}
 
 }
